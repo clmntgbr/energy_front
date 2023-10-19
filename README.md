@@ -1,7 +1,6 @@
-# Symfony Docker Template
+# Gas BackEnd Project
 
-A Symfony 6.1 docker template base project using PHP8.1, Nginx, MariaDb, RabbitMQ, MailDev.
-
+its the backend part for the Gas project, who collect all gas price from Gas station in France
 ## Getting Started
 
 1. Clone https://github.com/clmntgbr/setup and run `make start`
@@ -23,11 +22,11 @@ Open `https://gas.traefik.me/admin` for the admin part
 
 ## Commands
 
-`make price-download` to download latest JSON gas price
-`make price-update` to update gas price
-`make status-update` to update gas station based on the status
-`make status-update` to check placeId anomaly
-`make consume` to consume messages from commands
+`make price-download` to download latest JSON gas price  
+`make price-update` to update gas price  
+`make status-update` to update gas station based on the status  
+`make status-update` to check placeId anomaly  
+`make consume` to consume messages from commands  
 
 ## Features
 
