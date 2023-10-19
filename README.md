@@ -25,7 +25,7 @@ Open `https://gas.traefik.me/admin` for the admin part
 `make price-download` to download latest JSON gas price  
 `make price-update` to update gas price  
 `make status-update` to update gas station based on the status  
-`make status-update` to check placeId anomaly  
+`make status-anomaly` to check placeId anomaly  
 `make consume` to consume messages from commands  
 
 ## Features
