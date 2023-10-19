@@ -21,6 +21,14 @@ Open `https://rabbitmq.traefik.me` in your favorite web browser for rabbitmq
 Open `https://gas.traefik.me` in your favorite web browser for symfony app
 Open `https://gas.traefik.me/admin` for the admin part
 
+## Commands
+
+`make price-download` to download latest JSON gas price
+`make price-update` to update gas price
+`make status-update` to update gas station based on the status
+`make status-update` to check placeId anomaly
+`make consume` to consume messages from commands
+
 ## Features
 
 * PHP 8.2
