@@ -17,7 +17,7 @@ class GooglePlaceApiService
     public function placeTextsearch(GasStation $gasStation): ?string
     {
         $url = rawurlencode($this->stripAccents(sprintf('%s %s %s', $gasStation->getAddress()->getNumber(), $gasStation->getAddress()->getStreet(), $gasStation->getAddress()->getCity())));
-        $url = sprintf($this->placeTextsearchUrl, $url, $this->googleApiKey, $gasStation->getAddress()->getLatitude(), $gasStation->getAddress()->getLongitude());
+        $url = sprintf($this->placeTextsearchUrl, $url, $this->googleApiKey);
 
         $client = new Client();
         $response = $client->request('GET', $url);

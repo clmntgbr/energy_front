@@ -87,7 +87,7 @@ final class GooglePlaceService
         }
 
         $address
-            ->setVicinity($details['vicinity'] ?? null)
+            ->setVicinity(sprintf('%s %s, %s %s', $address->getNumber(), $address->getStreet(), $address->getPostalCode(), $address->getCity()))
             ->setLongitude($details['geometry']['location']['lng'] ?? null)
             ->setLatitude($details['geometry']['location']['lat'] ?? null);
     }

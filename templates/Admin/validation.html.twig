@@ -1,0 +1,633 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_content %}
+    {% if gasStation is not null and gasStation is defined %}
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <style>
+            .form-panel-header {
+                box-shadow: none!important;
+            }
+
+            .content-header .page-actions {
+                position: fixed!important;
+                z-index: 1000!important;
+                right: 10px!important;
+            }
+
+            .content-header {
+                padding: 5px!important;
+            }
+        </style>
+
+        <article class="content">
+            <section class="content-header">
+                <div class="content-header-title">
+                    <h1 class="title">
+                        {{ gasStation.gasStationId }}
+                    </h1>
+                </div>
+
+                <div class="page-actions">
+
+                    <a class=" action-index btn btn-secondary"
+                       href="/admin?routeName=app_admin_validation&gasStationId={{ gasStation.gasStationId }}"
+                       data-action-name="index"><span class="action-label">Recharger</span></a>
+
+                    <a class=" action-index btn btn-secondary"
+                       href="/admin?routeName=app_admin_validation"
+                       data-action-name="index"><span class="action-label">Suivant</span></a>
+
+                    <a class=" action-index btn btn-secondary"
+                       href="{{ gasStationUrlEdit }}"
+                       data-action-name="index" target="_blank"><span class="action-label">Edit</span></a>
+
+                    <a class=" action-index btn btn-secondary"
+                       href="{{ path('app_admin_validation_rejected_placedetails', {'gasStationId': gasStation.gasStationId}) }}"
+                       data-action-name="index"><span class="action-label">Rejected to PlaceDetails</span></a>
+
+                    <a class=" action-index btn btn-secondary"
+                       href="{{ path('app_admin_validation_rejected_textsearch', {'gasStationId': gasStation.gasStationId}) }}"
+                       data-action-name="index"><span class="action-label">Rejected to TextSearch</span></a>
+
+                    <a class=" action-edit btn btn-primary"
+                       href="{{ path('app_admin_validation_validate', {'gasStationId': gasStation.gasStationId}) }}"
+                       data-action-name="valider"><span class="action-label">Valider</span></a>
+
+                </div>
+            </section>
+
+            <section id="main" class="content-body">
+
+                <div class="field-form_panel">
+                    <div class="form-panel">
+                        <div class="form-panel-header  ">
+                            <div class="form-panel-title">
+                                <a href="#" class="not-collapsible">
+
+                                    Gas Station Details
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div id="content-01HD2658JRQEYMZXJBBKGDD7SV" class="form-panel-body  show">
+                            <dl class="datalist">
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Gas Station Id
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.gasStationId }}
+                                    </dd>
+                                </div>
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Name
+
+                                    </dt>
+                                    <dd>
+                                        <span title="Station Bp Thiais Sud">{{ gasStation.name }}</span>
+
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-form_panel">
+                    <div class="form-panel">
+                        <div class="form-panel-header  ">
+                            <div class="form-panel-title">
+                                <a href="#" class="not-collapsible">
+
+                                    Status
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div id="content-01HD2658JSGQPRSRQHM089JHBJ" class="form-panel-body  show">
+                            <dl class="datalist">
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Status
+
+                                    </dt>
+                                    <dd>
+                                        <span title="waiting_validation">{{ gasStation.status }}</span>
+
+                                    </dd>
+                                </div>
+
+                                <div class="data-row field-array">
+                                    <dt>
+                                        Status History
+
+                                    </dt>
+                                    <dd>
+                                        <ul>
+                                            {% for status in gasStation.statuses|reverse %}
+                                                <li>{{ status }}</li>
+                                            {% endfor %}
+                                        </ul>
+
+                                    </dd>
+                                </div>
+
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-form_panel">
+                    <div class="form-panel">
+                        <div class="form-panel-header  ">
+                            <div class="form-panel-title">
+                                <a href="#" class="not-collapsible">
+
+                                    GooglePlace
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div id="content-01HD2658JTHM9RY7G783C7QDCC" class="form-panel-body  show">
+                            <dl class="datalist">
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Id
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.googlePlace.id }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Uuid
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.googlePlace.uuid }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        PlaceId
+
+                                    </dt>
+                                    <dd>
+                                        <span title="ChIJy6os2ALnC0ERoP9M1-lWp_4">{{ gasStation.googlePlace.placeId }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        GoogleId
+
+                                    </dt>
+                                    <dd>
+                                        <span class="badge badge-secondary">{{ gasStation.googlePlace.googleId }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Website
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.website }}">{{ gasStation.googlePlace.website }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        PhoneNumber
+
+                                    </dt>
+                                    <dd>
+                                        <span title="+33 1 45 60 45 71">{{ gasStation.googlePlace.phoneNumber }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        CompoundCode
+
+                                    </dt>
+                                    <dd>
+                                        <span title="Q93F+XW Thiais, France">{{ gasStation.googlePlace.compoundCode }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        GlobalCode
+
+                                    </dt>
+                                    <dd>
+                                        <span title="8FW4Q93F+XW">{{ gasStation.googlePlace.globalCode }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        GoogleRating
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.googleRating }}">{{ gasStation.googlePlace.googleRating }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Rating
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.rating }}">{{ gasStation.googlePlace.rating }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        UserRatingsTotal
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.userRatingsTotal }}">{{ gasStation.googlePlace.userRatingsTotal }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Icon
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.icon }}">{{ gasStation.googlePlace.icon }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Reference
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.reference }}">{{ gasStation.googlePlace.reference }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        WheelchairAccessible
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.wheelchairAccessibleEntrance }}">{{ gasStation.googlePlace.wheelchairAccessibleEntrance }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        BusinessStatus
+
+                                    </dt>
+                                    <dd>
+                                        <span title="{{ gasStation.googlePlace.businessStatus }}">{{ gasStation.googlePlace.businessStatus }}</span>
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-array">
+                                    <dt>
+                                        OpeningHours
+
+                                    </dt>
+                                    <dd>
+                                        <ul>
+                                            {% for openingHour in gasStation.googlePlace.openingHours %}
+                                                <li>{{ openingHour }}</li>
+                                            {% endfor %}
+                                        </ul>
+
+                                    </dd>
+                                </div>
+
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-form_panel">
+                    <div class="form-panel">
+                        <div class="form-panel-header  ">
+                            <div class="form-panel-title">
+                                <a href="#" class="not-collapsible">
+
+                                    Address
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div id="content-01HD2658JVV5QY55YFTG15B3AY" class="form-panel-body  show">
+                            <dl class="datalist">
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Id
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.id }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Uuid
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.uuid }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Vicinity
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.vicinity }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Street
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.street }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Street Number
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.number }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        City
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.city }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Region
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.region }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        PostalCode
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.postalCode }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Country
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.country }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Longitude
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.longitude }}
+
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                        Latitude
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.latitude }}
+
+                                    </dd>
+                                </div>
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-form_panel">
+                    <div class="form-panel">
+                        <div class="form-panel-header  ">
+                            <div class="form-panel-title">
+                                <a href="#" class="not-collapsible">
+
+                                    Validator
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div id="content-01HD2658JVV5QY55YFTG15B3AY" class="form-panel-body  show">
+                            <dl class="datalist">
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Vicinity
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.address.vicinity }}
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Base Vicinity
+
+                                    </dt>
+                                    <dd>
+                                        {{ gasStation.element.adresse }}, {{ gasStation.element.ville }}
+
+                                    </dd>
+                                </div>
+
+                                <div class="data-row field-id">
+                                    <dt>
+                                        Same Place Id
+
+                                    </dt>
+                                    <dd>
+                                        {% if gasStations is not empty %}
+                                            {{ gasStations.length }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+
+                                <div class="data-row field-text">
+                                    <dt>
+                                    </dt>
+                                    <dd>
+                                    </dd>
+                                </div>
+
+                                <div id="map" style="height: 400px;"></div>
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </article>
+
+        <script>
+            var map = L.map('map').setView([51.505, -0.09], 13); // Coordonnées et niveau de zoom par défaut
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            var bounds = new L.LatLngBounds();
+
+            var redIcon = L.icon({
+                iconUrl: '{{ asset('images/red-icon.png') }}',
+                iconSize: [20, 20],
+                iconAnchor: [12, 41]
+            });
+
+            function addMarkerByAddress(address, popupText) {
+                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + address)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        var result = data[0];
+                        var lat = result.lat;
+                        var lon = result.lon;
+                        if (popupText === 'Base vicinity') {
+                            var marker = L.marker([lat, lon], { icon: redIcon }).addTo(map);
+                        } else {
+                            var marker = L.marker([lat, lon]).addTo(map);
+                        }
+                        marker.bindPopup(popupText);
+                        bounds.extend([lat, lon]);
+                        map.fitBounds(bounds);
+                    })
+                    .catch(function(error) {
+                        console.error('Erreur de géocodage :', error);
+                    });
+            }
+
+            addMarkerByAddress('{{ gasStation.address.vicinity }}', 'Vicinity');
+            addMarkerByAddress('{{ gasStation.element.adresse }}, {{ gasStation.element.ville }}', 'Base vicinity');
+        </script>
+    {% else %}
+        <p>rien</p>
+    {% endif %}
+{% endblock %}

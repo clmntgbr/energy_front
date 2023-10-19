@@ -36,7 +36,12 @@ final class CreateGooglePlaceDetailsMessageHandler
             throw new UnrecoverableMessageHandlingException(sprintf('Gas Station doesnt exist (id : %s)', $message->getGasStationId()->getId()));
         }
 
-        if (!in_array($gasStation->getStatus(), [GasStationStatusReference::FOUND_IN_TEXTSEARCH, GasStationStatusReference::UPDATED_TO_FOUND_IN_DETAILS, GasStationStatusReference::NOT_FOUND_IN_DETAILS])) {
+        if (!in_array($gasStation->getStatus(), [
+            GasStationStatusReference::FOUND_IN_TEXTSEARCH,
+            GasStationStatusReference::UPDATED_TO_FOUND_IN_DETAILS,
+            GasStationStatusReference::NOT_FOUND_IN_DETAILS,
+            GasStationStatusReference::VALIDATION_REJECTED,
+        ])) {
             throw new UnrecoverableMessageHandlingException(sprintf('Wrong status for Gas Station (gasStationId : %s)', $message->getGasStationId()->getId()));
         }
 

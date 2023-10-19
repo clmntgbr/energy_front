@@ -51,7 +51,11 @@ final class GeocodingAddressMessageHandler
             throw new UnrecoverableMessageHandlingException(sprintf('Gas Station doesn\'t exist (gasStationId : %s)', $message->getGasStationId()->getId()));
         }
 
-        if (!in_array($gasStation->getStatus(), [GasStationStatusReference::CREATED, GasStationStatusReference::UPDATED_TO_ADDRESS_FORMATED])) {
+        if (!in_array($gasStation->getStatus(), [
+            GasStationStatusReference::CREATED,
+            GasStationStatusReference::UPDATED_TO_ADDRESS_FORMATED,
+            GasStationStatusReference::ADDRESS_ERROR_FORMATED,
+            ])) {
             throw new UnrecoverableMessageHandlingException(sprintf('Wrong status for Gas Station (gasStationId : %s)', $message->getGasStationId()->getId()));
         }
 

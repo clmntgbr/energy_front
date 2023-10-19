@@ -36,7 +36,7 @@ class GasPriceUpdateCommandService
 
         $gasStations = $this->gasStationRepository->findGasStationsById();
 
-        $count = 0; //dev
+        $count = 0; // dev
 
         foreach ($data as $datum) {
             $gasStationId = $this->gasStationService->getGasStationId($datum['@attributes']['id']);
@@ -45,7 +45,7 @@ class GasPriceUpdateCommandService
                 continue;
             }
 
-            ++$count; //dev
+            ++$count; // dev
 
             $hash = $this->getHash($datum);
 
@@ -58,15 +58,16 @@ class GasPriceUpdateCommandService
             }
 
             $this->createGasPricesMessage($gasStationId, $datum);
-            if ($count >= 20) { //dev
-                exit; //dev
-            } //dev
+            if ($count >= 10) { // dev
+                exit; // dev
+            } // dev
         }
     }
 
     private function getHash(array $datum): string
     {
         $element = $datum['services'] ?? [];
+
         return hash('sha256', json_encode($element));
     }
 
@@ -141,6 +142,7 @@ class GasPriceUpdateCommandService
         if (is_array($datum)) {
             return implode(' ', $datum);
         }
+
         return $datum;
     }
 }

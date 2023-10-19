@@ -13,11 +13,11 @@ use App\Repository\GasStationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class GasStatusUpdateCommandService
+class GasStationStatusUpdateCommandService
 {
-    const MAX_RETRY_POSITION_STACK = 5;
-    const MAX_RETRY_TEXT_SEARCH = 5;
-    const MAX_RETRY_PLACE_DETAILS = 5;
+    public const MAX_RETRY_POSITION_STACK = 5;
+    public const MAX_RETRY_TEXT_SEARCH = 5;
+    public const MAX_RETRY_PLACE_DETAILS = 5;
 
     public function __construct(
         private readonly GasStationRepository $gasStationRepository,
@@ -34,6 +34,7 @@ class GasStatusUpdateCommandService
             match ($gasStation->getStatus()) {
                 GasStationStatusReference::CREATED => $this->created($gasStation),
                 GasStationStatusReference::UPDATED_TO_ADDRESS_FORMATED => $this->created($gasStation),
+                GasStationStatusReference::ADDRESS_ERROR_FORMATED => $this->created($gasStation),
 
                 GasStationStatusReference::ADDRESS_FORMATED => $this->textSearch($gasStation),
                 GasStationStatusReference::UPDATED_TO_FOUND_IN_TEXTSEARCH => $this->textSearch($gasStation),

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\GasStation;
+use App\Lists\GasStationStatusReference;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,10 +22,7 @@ class GasStationRepository extends ServiceEntityRepository
         parent::__construct($registry, GasStation::class);
     }
 
-    /**
-     * @return []
-     */
-    public function findGasStationsById()
+    public function findGasStationsById(): array
     {
         $query = $this->createQueryBuilder('s')
             ->indexBy('s', 's.gasStationId')
@@ -32,6 +30,29 @@ class GasStationRepository extends ServiceEntityRepository
             ->getQuery();
 
         return $query->getArrayResult();
+    }
+
+    public function findGasStationsByPlaceId(): array
+    {
+        $query = $this->createQueryBuilder('s')
+            ->select('s')
+            ->innerJoin('s.googlePlace', 'ss')
+            ->where('ss.placeId IS NOT NULL')
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function findRandomGasStation(): ?GasStation
+    {
+        $query = $this->createQueryBuilder('p')
+            ->where('p.status = :status')
+            ->setParameter('status', GasStationStatusReference::WAITING_VALIDATION)
+            ->orderBy('RAND()')
+            ->setMaxResults(1)
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
     }
 
     /** @return GasStation[] */
@@ -119,13 +140,17 @@ class GasStationRepository extends ServiceEntityRepository
      *
      * @throws QueryException
      */
-    public function getGasStationGooglePlaceByPlaceId(GasStation $gasStation)
+    public function getGasStationGooglePlaceByPlaceId(?GasStation $gasStation)
     {
         $query = $this->createQueryBuilder('s')
             ->select('s')
             ->innerJoin('s.googlePlace', 'ss')
             ->where('ss.placeId = :placeId AND ss.placeId IS NOT NULL')
-            ->setParameter('placeId', $gasStation->getGooglePlace()->getPlaceId())
+            ->andWhere('s.uuid != :uuid')
+            ->setParameters([
+                'placeId' => $gasStation?->getGooglePlace()->getPlaceId(),
+                'uuid' => $gasStation?->getUuid(),
+            ])
             ->getQuery();
 
         return $query->getResult();

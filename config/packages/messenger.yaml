@@ -70,5 +70,5 @@ framework:
             App\Message\GeocodingAddressMessage: async_priority_medium
             App\Message\ErrorGeocodingAddressMessage: async_priority_medium
             App\Message\CreateGooglePlaceTextsearchMessage: async_priority_medium
-            # App\Message\CreateGooglePlaceAnomalyMessage: async_priority_high
+            App\Message\CreateGooglePlaceAnomalyMessage: async_priority_high
             App\Message\CreateGooglePlaceDetailsMessage: async_priority_high

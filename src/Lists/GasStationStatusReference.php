@@ -25,6 +25,8 @@ class GasStationStatusReference
     public const PLACE_ID_ANOMALY = 'place_id_anomaly';
 
     public const WAITING_VALIDATION = 'waiting_validation';
+    public const VALIDATION_REJECTED = 'validation_rejected';
+    public const VALIDATED = 'validated';
 
     public const OPEN = 'open';
     public const CLOSED = 'closed';

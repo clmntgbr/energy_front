@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controller;
 
-use App\Admin\Field\LinkField;
 use App\Admin\Filter\GasStationStatusFilter;
 use App\Entity\GasStation;
 use App\Lists\GasStationStatusReference;
@@ -71,6 +70,9 @@ class GasStationCrudController extends AbstractCrudController
             GasStationStatusReference::UPDATED_TO_ADDRESS_FORMATED => GasStationStatusReference::UPDATED_TO_ADDRESS_FORMATED,
             GasStationStatusReference::UPDATED_TO_FOUND_IN_TEXTSEARCH => GasStationStatusReference::UPDATED_TO_FOUND_IN_TEXTSEARCH,
             GasStationStatusReference::UPDATED_TO_FOUND_IN_DETAILS => GasStationStatusReference::UPDATED_TO_FOUND_IN_DETAILS,
+
+            GasStationStatusReference::WAITING_VALIDATION => GasStationStatusReference::WAITING_VALIDATION,
+
             GasStationStatusReference::CLOSED => GasStationStatusReference::CLOSED,
             GasStationStatusReference::OPEN => GasStationStatusReference::OPEN,
         ];

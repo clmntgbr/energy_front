@@ -7,7 +7,6 @@ use App\Entity\GasService;
 use App\Entity\GasStation;
 use App\Repository\GasServiceRepository;
 use Cocur\Slugify\Slugify;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 

@@ -62,5 +62,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('GooglePlace', 'fas fa-list', GooglePlace::class);
         yield MenuItem::linkToCrud('Address', 'fas fa-list', Address::class);
         yield MenuItem::linkToCrud('User', 'fas fa-list', User::class);
+        yield MenuItem::linktoRoute('Validation', 'fa fa-list', 'app_admin_validation');
     }
 }

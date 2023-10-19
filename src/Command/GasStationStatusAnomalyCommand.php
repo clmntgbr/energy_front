@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\GasStatusUpdateCommandService;
+use App\Service\GasStationStatusAnomalyCommandService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,12 +10,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:gas-status:update',
+    name: 'app:gas-status:anomaly',
 )]
-class GasStatusUpdateCommand extends Command
+class GasStationStatusAnomalyCommand extends Command
 {
     public function __construct(
-        private GasStatusUpdateCommandService $gasStatusUpdateCommandService,
+        private GasStationStatusAnomalyCommandService $gasStationStatusAnomalyCommandService,
     ) {
         parent::__construct(self::getDefaultName());
     }
@@ -28,7 +28,7 @@ class GasStatusUpdateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->gasStatusUpdateCommandService->invoke();
+        $this->gasStationStatusAnomalyCommandService->invoke();
 
         return Command::SUCCESS;
     }

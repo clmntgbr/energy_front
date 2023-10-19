@@ -34,39 +34,44 @@ final class CreateGooglePlaceTextsearchMessageHandler
             $this->em->refresh();
         }
 
-         $gasStation = $this->gasStationRepository->findOneBy(['gasStationId' => $message->getGasStationId()->getId()]);
+        $gasStation = $this->gasStationRepository->findOneBy(['gasStationId' => $message->getGasStationId()->getId()]);
 
-         if (null === $gasStation) {
-             throw new UnrecoverableMessageHandlingException(sprintf('Gas Station doesnt exist (id : %s)', $message->getGasStationId()->getId()));
-         }
+        if (null === $gasStation) {
+            throw new UnrecoverableMessageHandlingException(sprintf('Gas Station doesnt exist (id : %s)', $message->getGasStationId()->getId()));
+        }
 
-         if (!in_array($gasStation->getStatus(), [GasStationStatusReference::ADDRESS_FORMATED, GasStationStatusReference::UPDATED_TO_FOUND_IN_TEXTSEARCH, GasStationStatusReference::NOT_FOUND_IN_TEXTSEARCH])) {
-             throw new UnrecoverableMessageHandlingException(sprintf('Wrong status for Gas Station (gasStationId : %s)', $message->getGasStationId()->getId()));
-         }
+        if (!in_array($gasStation->getStatus(), [
+            GasStationStatusReference::ADDRESS_FORMATED,
+            GasStationStatusReference::UPDATED_TO_FOUND_IN_TEXTSEARCH,
+            GasStationStatusReference::NOT_FOUND_IN_TEXTSEARCH,
+            GasStationStatusReference::VALIDATION_REJECTED,
+        ])) {
+            throw new UnrecoverableMessageHandlingException(sprintf('Wrong status for Gas Station (gasStationId : %s)', $message->getGasStationId()->getId()));
+        }
 
-         if (GasStationStatusReference::PLACE_ID_ANOMALY === $gasStation->getStatus()) {
-             return true;
-         }
+        if (GasStationStatusReference::PLACE_ID_ANOMALY === $gasStation->getStatus()) {
+            return true;
+        }
 
-         $response = $this->googlePlaceApiService->placeTextsearch($gasStation);
+        $response = $this->googlePlaceApiService->placeTextsearch($gasStation);
 
-         if (null === $response) {
-             return $this->gasStationService->setGasStationStatus($gasStation, GasStationStatusReference::NOT_FOUND_IN_TEXTSEARCH);
-         }
+        if (null === $response) {
+            return $this->gasStationService->setGasStationStatus($gasStation, GasStationStatusReference::NOT_FOUND_IN_TEXTSEARCH);
+        }
 
-         $gasStation->getGooglePlace()->setPlaceId($response);
-         $this->gasStationService->setGasStationStatus($gasStation, GasStationStatusReference::FOUND_IN_TEXTSEARCH);
+        $gasStation->getGooglePlace()->setPlaceId($response);
+        $this->gasStationService->setGasStationStatus($gasStation, GasStationStatusReference::FOUND_IN_TEXTSEARCH);
 
-         $gasStationsAnomalies = $this->gasStationRepository->getGasStationGooglePlaceByPlaceId($gasStation);
+        $gasStationsAnomalies = $this->gasStationRepository->getGasStationGooglePlaceByPlaceId($gasStation);
 
-         if (count($gasStationsAnomalies) > 1) {
-             return $this->googlePlaceService->createAnomalies($gasStationsAnomalies);
-         }
+        if (count($gasStationsAnomalies) > 0) {
+            return $this->googlePlaceService->createAnomalies(array_merge($gasStationsAnomalies, [$gasStation]));
+        }
 
-         return $this->messageBus->dispatch(
-             new CreateGooglePlaceDetailsMessage(
-                 new GasStationId($gasStation->getGasStationId())
-             )
-         );
+        return $this->messageBus->dispatch(
+            new CreateGooglePlaceDetailsMessage(
+                new GasStationId($gasStation->getGasStationId())
+            )
+        );
     }
 }

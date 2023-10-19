@@ -21,6 +21,7 @@
         "lexik/jwt-authentication-bundle": "*",
         "nelmio/cors-bundle": "^2.3",
         "ramsey/uuid-doctrine": "^2.0",
+        "sensio/framework-extra-bundle": "^6.2",
         "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/amqp-messenger": "6.3.*",
         "symfony/asset": "6.2.*",

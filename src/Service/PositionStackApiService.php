@@ -26,7 +26,7 @@ class PositionStackApiService
 
         try {
             $response = $client->request('GET', $url);
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return ['message' => $exception->getMessage(), 'forwardUrl' => $url];
         }
 
@@ -54,7 +54,7 @@ class PositionStackApiService
 
         try {
             $response = $client->request('GET', $url);
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return ['message' => $exception->getMessage(), 'reverseUrl' => $url];
         }
 

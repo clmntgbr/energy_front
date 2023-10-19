@@ -125,6 +125,9 @@ price-update:
 status-update:
 	$(PHP) bin/console app:gas-status:update
 
+status-anomaly:
+	$(PHP) bin/console app:gas-status:anomaly
+
 ## QA
 cs-fixer:
 	docker run --init -it --rm -v $(PWD):/project -w /project jakzal/phpqa php-cs-fixer fix ./src --rules=@Symfony
