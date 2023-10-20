@@ -401,7 +401,7 @@ class GasStationCrudController extends AbstractCrudController
             CodeEditorField::new('googlePlace.placeDetailsApiResultAdmin')
                 ->hideOnIndex()
                 ->setDisabled()
-                ->setLabel('PlaceDetailsApiResultAdmin'),
+                ->setLabel('PlaceDetailsApiResult'),
         ];
     }
 }

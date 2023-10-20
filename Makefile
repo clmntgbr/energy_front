@@ -6,10 +6,12 @@ DOCKER_COMPOSE = docker-compose -p $(PROJECT_NAME)
 
 CONTAINER_NGINX = $$(docker container ls -f "name=$(PROJECT_NAME)_nginx" -q)
 CONTAINER_PHP = $$(docker container ls -f "name=$(PROJECT_NAME)_php" -q)
+CONTAINER_NODE = $$(docker container ls -f "name=$(PROJECT_NAME)_node" -q)
 CONTAINER_DB = $$(docker container ls -f "name=$(PROJECT_NAME)_database" -q)
 
 NGINX = docker exec -ti $(CONTAINER_NGINX)
 PHP = docker exec -ti $(CONTAINER_PHP)
+NODE = docker exec -ti $(CONTAINER_NODE)
 DATABASE = docker exec -ti $(CONTAINER_DB)
 
 COLOR_RESET			= \033[0m
@@ -46,8 +48,8 @@ init: install update
 ## Start containers
 start:
 	@$(DOCKER_COMPOSE) up -d
-	@echo "site is available here: 'https://gas.traefik.me'"
-	@echo "admin is available here: 'https://gas.traefik.me/admin'"
+	@echo "admin is available here: 'https://back.traefik.me/admin'"
+	@echo "front is available here: 'https://front.traefik.me'"
 
 ## Stop containers
 stop:
@@ -73,6 +75,9 @@ cache:
 ## Entering php shell
 php:
 	@$(DOCKER_COMPOSE) exec php sh
+
+node:
+	@$(DOCKER_COMPOSE) exec node sh
 
 ## Entering nginx shell
 nginx:
