@@ -24,3 +24,5 @@ yarn-error.log
 
 .php-cs-fixer.cache
 /public/gas_prices/
+/client/node_modules/
+/client/.next/
