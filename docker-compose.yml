@@ -30,11 +30,12 @@ services:
       dockerfile: ./.deployment/docker/containers/node/Dockerfile
     volumes:
       - ./client:/srv/app
-    command: npm run dev
+    stdin_open: true
     ports:
       - 8071:3000
     environment:
       NODE_ENV: development
+    tty: true
     networks:
       - service
       - traefik
