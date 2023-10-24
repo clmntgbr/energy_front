@@ -31,8 +31,6 @@ services:
     volumes:
       - ./client:/srv/app
     stdin_open: true
-    ports:
-      - 8071:3000
     environment:
       NODE_ENV: development
     tty: true
@@ -51,8 +49,6 @@ services:
     depends_on:
       - php
     image: nginx:1.20-alpine
-    ports:
-      - 8085:8080
     environment:
       - HTTPS_METHOD=noredirect
     networks:

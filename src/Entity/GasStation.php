@@ -22,6 +22,7 @@ use function Safe\json_encode;
 #[ORM\Entity(repositoryClass: GasStationRepository::class)]
 #[ApiResource(
     collectionOperations: [
+        'get' => ['normalization_context' => ['skip_null_values' => false, 'groups' => ['get_gas_stations', 'common']]],
         'get_gas_stations_map' => [
             'method' => 'GET',
             'path' => '/gas_stations/map',
@@ -44,22 +45,22 @@ class GasStation
     use BlameableEntity;
 
     #[ORM\Column(type: Types::STRING, length: 10)]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private string $pop;
 
     #[ORM\Column(type: Types::STRING, length: 20)]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private string $gasStationId;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $statuses = [];
 
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private ?string $status;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
@@ -67,16 +68,16 @@ class GasStation
     private bool $hasGasStationBrandVerified = false;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private ?\DateTimeImmutable $closedAt = null;
 
     #[ORM\OneToOne(targetEntity: Address::class, cascade: ['persist', 'remove'])]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     #[ORM\JoinColumn(nullable: false)]
     private Address $address;
 
     #[ORM\ManyToOne(targetEntity: GooglePlace::class, cascade: ['persist', 'remove'])]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     #[ORM\JoinColumn(nullable: false)]
     private GooglePlace $googlePlace;
 
@@ -93,14 +94,14 @@ class GasStation
     private ?string $hash;
 
     #[ORM\ManyToOne(targetEntity: GasStationBrand::class, cascade: ['persist'], fetch: 'LAZY')]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private GasStationBrand $gasStationBrand;
 
     #[ORM\OneToMany(mappedBy: 'gasStation', targetEntity: GasPrice::class, cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private Collection $gasPrices;
 
     #[ORM\ManyToMany(targetEntity: GasService::class, inversedBy: 'gasStations', cascade: ['persist'])]
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     private Collection $gasServices;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
@@ -140,19 +141,19 @@ class GasStation
         return (string) $this->gasStationId;
     }
 
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     public function getImagePath(): string
     {
         return sprintf('/images/gas_stations/%s', $this->getImage()->getName());
     }
 
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     public function getLastPrices(): array
     {
         return array_combine(array_slice([0, 1, 2, 3, 4, 5], 0, count($this->lastGasPrices)), $this->lastGasPrices);
     }
 
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     public function getPreviousPrices(): array
     {
         return array_combine(array_slice([0, 1, 2, 3, 4, 5], 0, count($this->previousGasPrices)), $this->previousGasPrices);
