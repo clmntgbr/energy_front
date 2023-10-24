@@ -18,7 +18,7 @@ trait IdentifyTraits
 
     #[ORM\Column(type: Types::GUID, unique: true, length: 36)]
     #[ApiProperty(identifier: true)]
-    #[Groups(['get_gas_stations', 'get_gas_types'])]
+    #[Groups(['get_gas_stations', 'get_gas_types', 'get_gas_station'])]
     private ?string $uuid;
 
     public function getId(): ?int

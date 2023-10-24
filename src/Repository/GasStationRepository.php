@@ -69,7 +69,7 @@ class GasStationRepository extends ServiceEntityRepository
                     JSON_KEYS(s.last_gas_prices) as gas_types,
                     
                     (SELECT GROUP_CONCAT(gs.name SEPARATOR ', ')
-                    FROM gas_service_gas_station gss
+                    FROM gas_station_gas_service gss
                     INNER JOIN gas_service gs ON gss.gas_service_id = gs.id
                     AND gss.gas_station_id = s.id) as gas_services
   

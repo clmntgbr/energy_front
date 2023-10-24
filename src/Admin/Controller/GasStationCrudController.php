@@ -81,16 +81,20 @@ class GasStationCrudController extends AbstractCrudController
             FormField::addPanel('Gas Station Details'),
             IdField::new('gasStationId')
                 ->setDisabled()
-                ->setColumns('col-sm-6 col-lg-6 col-xxl-3'),
+                ->setColumns('col-sm-12 col-lg-12 col-xxl-12'),
             TextField::new('hash')
                 ->hideOnIndex()
                 ->setDisabled()
-                ->setColumns('col-sm-6 col-lg-6 col-xxl-3'),
+                ->setColumns('col-sm-12 col-lg-12 col-xxl-12'),
             TextField::new('name')
-                ->setColumns('col-sm-6 col-lg-6 col-xxl-3'),
+                ->setColumns('col-sm-12 col-lg-12 col-xxl-12'),
             TextField::new('pop')
                 ->hideOnIndex()
-                ->setColumns('col-sm-6 col-lg-6 col-xxl-3'),
+                ->setColumns('col-sm-12 col-lg-12 col-xxl-12'),
+            TextField::new('uuid')
+                ->hideOnIndex()
+                ->setColumns('col-sm-12 col-lg-12 col-xxl-12')
+                ->setDisabled(),
 
             FormField::addPanel('Status'),
             TextField::new('status')
@@ -401,7 +405,7 @@ class GasStationCrudController extends AbstractCrudController
             CodeEditorField::new('googlePlace.placeDetailsApiResultAdmin')
                 ->hideOnIndex()
                 ->setDisabled()
-                ->setLabel('PlaceDetailsApiResultAdmin'),
+                ->setLabel('PlaceDetailsApiResult'),
         ];
     }
 }

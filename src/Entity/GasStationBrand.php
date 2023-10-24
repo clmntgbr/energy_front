@@ -44,13 +44,13 @@ class GasStationBrand
         $this->uuid = Uuid::v4();
     }
 
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     public function getImagePath(): string
     {
         return sprintf('/images/gas_stations_brand/%s', $this->getImage()->getName());
     }
 
-    #[Groups(['get_gas_stations'])]
+    #[Groups(['get_gas_stations', 'get_gas_station'])]
     public function getImageLowPath(): string
     {
         return sprintf('/images/gas_stations_brand/%s', $this->getImageLow()->getName());

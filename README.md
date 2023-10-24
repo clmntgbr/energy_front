@@ -3,11 +3,12 @@
 its the backend part for the Gas project, who collect all gas price from Gas station in France
 ## Getting Started
 
-1. Clone https://github.com/clmntgbr/setup and run `make start`
+1. Clone https://github.com/clmntgbr/setup and run `make build start` for the setup project
 2. Clone this repo
-3. Run `cp .env.dist .env`
-6. Run `make init` to initialize the project
-7. You can run `make help` to see all commands available
+3. Run `cp .env.dist .env` and change some variable
+4. Run `make build start` to start docker
+5. Run `make init` to initialize the project
+6. You can run `make help` to see all commands available
 
 ## Overview
 
@@ -17,9 +18,11 @@ Open `https://maildev.traefik.me` in your favorite web browser for maildev
 
 Open `https://rabbitmq.traefik.me` in your favorite web browser for rabbitmq
 
-Open `https://gas.traefik.me` in your favorite web browser for symfony app  
+Open `https://back.traefik.me` in your favorite web browser for symfony app
 
-Open `https://gas.traefik.me/admin` for the admin part
+Open `https://back.traefik.me/admin` for the admin part
+
+Open `https://front.traefik.me` in your favorite web browser for tye front app
 
 ## Commands
 
@@ -29,7 +32,7 @@ Open `https://gas.traefik.me/admin` for the admin part
 `make status-anomaly` to check placeId anomaly  
 `make consume` to consume messages from commands  
 
-## Features
+## Skills
 
 * PHP 8.2
 * Nginx 1.20
@@ -38,5 +41,7 @@ Open `https://gas.traefik.me/admin` for the admin part
 * MailDev
 * Traefik latest
 * Symfony 6.2
+* Next.js
+* Docker
 
 **Enjoy!**

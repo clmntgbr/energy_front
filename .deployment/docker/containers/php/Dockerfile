@@ -2,13 +2,14 @@ ARG PHP_VERSION=8.1.3
 
 FROM php:${PHP_VERSION}-fpm-alpine as symfony_php
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 RUN apk add bash
 RUN apk add git
 RUN apk add nodejs
 RUN apk add npm
 RUN wget https://get.symfony.com/cli/installer -O - | bash && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 

@@ -23,13 +23,32 @@ services:
       - ./.deployment/docker/aliases/.ashrc:/home/www-data/.ashrc
     command: --define opcache.validate_timestamps=On
 
+  node:
+    container_name: ${PROJECT_NAME}_node
+    build:
+      context: .
+      dockerfile: ./.deployment/docker/containers/node/Dockerfile
+    volumes:
+      - ./client:/srv/app
+    stdin_open: true
+    environment:
+      NODE_ENV: development
+    tty: true
+    networks:
+      - service
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.gas_front.rule=Host(`front.traefik.me`)"
+      - "traefik.http.routers.gas_front.tls=true"
+      - "traefik.http.services.gas_front.loadbalancer.server.port=3000"
+
   nginx:
     container_name: ${PROJECT_NAME}_nginx
     depends_on:
       - php
     image: nginx:1.20-alpine
-    ports:
-      - 8085:8080
     environment:
       - HTTPS_METHOD=noredirect
     networks:
@@ -41,7 +60,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`${PROJECT_NAME}.traefik.me`)"
+      - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`back.traefik.me`)"
       - "traefik.http.routers.${PROJECT_NAME}.tls=true"
       - "traefik.http.services.${PROJECT_NAME}.loadbalancer.server.port=8080"
 
