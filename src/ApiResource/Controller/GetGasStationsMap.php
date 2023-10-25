@@ -14,8 +14,8 @@ class GetGasStationsMap extends AbstractController
     public static string $operationName = 'get_gas_stations_map';
 
     public function __construct(
-        private GasStationRepository $gasStationRepository,
-        private GasStationsMapService $gasStationsMapService
+        private readonly GasStationRepository $gasStationRepository,
+        private readonly GasStationsMapService $gasStationsMapService
     ) {
     }
 
@@ -23,7 +23,7 @@ class GetGasStationsMap extends AbstractController
     {
         $latitude = $request->query->get('latitude') ?? 48.764977;
         $longitude = $request->query->get('longitude') ?? 2.358192;
-        $radius = $request->query->get('radius') ?? 50000;
+        $radius = $request->query->get('radius') ?? 500000;
         $gasTypeUuid = $request->query->get('gasTypeUuid') ?? '1';
         $filterCity = $request->query->get('filter_city') ?? null;
         $filterDepartment = $request->query->get('filter_department') ?? null;

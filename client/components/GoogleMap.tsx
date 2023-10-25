@@ -1,18 +1,13 @@
 'use client'
 
-import {GoogleMap, Marker} from "@react-google-maps/api";
+import {GoogleMap} from "@react-google-maps/api";
 import {useMemo} from "react";
 
 interface GetGoogleMapProps {
-    latitude: number;
-    longitude: number;
+    mapCenter: { lat: number, lng: number };
 }
 
-export default function GetGoogleMap({ latitude, longitude }: GetGoogleMapProps) {
-    const mapCenter = useMemo(
-        () => ({ lat: latitude, lng: longitude }),
-        []
-    );
+export default function GetGoogleMap({ mapCenter }: GetGoogleMapProps) {
 
     const mapOptions = useMemo<google.maps.MapOptions>(
         () => ({
@@ -32,11 +27,6 @@ export default function GetGoogleMap({ latitude, longitude }: GetGoogleMapProps)
         []
     );
 
-    const markerPosition = {
-        lat: latitude,
-        lng: longitude,
-    };
-
     const markerOptions = {
         icon: {
             url: 'https://cdn-icons-png.flaticon.com/512/4284/4284088.png', // Remplacez par l'URL de votre icône personnalisée
@@ -51,7 +41,6 @@ export default function GetGoogleMap({ latitude, longitude }: GetGoogleMapProps)
             center={mapCenter}
             mapContainerStyle={{ width: '100%', height: 'calc(100% - 4rem)' }}
             onLoad={() => console.log('Map Component Loaded...')}>
-            <Marker options={markerOptions}  position={markerPosition}/>
         </GoogleMap>
     );
 }

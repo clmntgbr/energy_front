@@ -77,7 +77,7 @@ class GasStationRepository extends ServiceEntityRepository
                     INNER JOIN address a ON s.address_id = a.id
                     WHERE a.longitude IS NOT NULL AND a.latitude IS NOT NULL $gasTypeFilter $cityFilter $departmentFilter
                     HAVING `distance` < $radius
-                    ORDER BY `distance` ASC LIMIT 50;
+                    ORDER BY `distance` ASC LIMIT 100;
         ";
 
         $statement = $this->getEntityManager()->getConnection()->prepare($query);
