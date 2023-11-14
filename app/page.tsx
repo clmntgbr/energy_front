@@ -67,7 +67,7 @@ export default function Home() {
         }
 
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url+"?latitude=%s&longitude=%s&radius=%s", newCenter.lat, newCenter.lng, widthKm*1000);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", newCenter.lat, newCenter.lng, widthKm * 1000);
 
         fetch(formattedString)
             .then((response) => response.json())
