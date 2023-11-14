@@ -1,7 +1,0 @@
-# App\Entity\GasStation:
-#   station_{1..20}:
-#     id: <randomNumber()>
-#     pop: "R"
-#     address: "@address_<current()>"
-#     googlePlace: "@google_<current()>"
-#     name: <sentence(1)>

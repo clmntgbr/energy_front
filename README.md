@@ -1,47 +1,36 @@
-# Gas BackEnd Project
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-its the backend part for the Gas project, who collect all gas price from Gas station in France
 ## Getting Started
 
-1. Clone https://github.com/clmntgbr/setup and run `make build start` for the setup project
-2. Clone this repo
-3. Run `cp .env.dist .env` and change some variable
-4. Run `make build start` to start docker
-5. Run `make init` to initialize the project
-6. You can run `make help` to see all commands available
+First, run the development server:
 
-## Overview
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Open `https://traefik.traefik.me/dashboard/#/` in your favorite web browser for traefik dashboard
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Open `https://maildev.traefik.me` in your favorite web browser for maildev
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Open `https://rabbitmq.traefik.me` in your favorite web browser for rabbitmq
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-Open `https://back.traefik.me` in your favorite web browser for symfony app
+## Learn More
 
-Open `https://back.traefik.me/admin` for the admin part
+To learn more about Next.js, take a look at the following resources:
 
-Open `https://front.traefik.me` in your favorite web browser for tye front app
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Commands
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-`make price-download` to download latest JSON gas price  
-`make price-update` to update gas price  
-`make status-update` to update gas station based on the status  
-`make status-anomaly` to check placeId anomaly  
-`make consume` to consume messages from commands  
+## Deploy on Vercel
 
-## Skills
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-* PHP 8.2
-* Nginx 1.20
-* RabbitMQ 3-management
-* MariaDB 10.4.19
-* MailDev
-* Traefik latest
-* Symfony 6.2
-* Next.js
-* Docker
-
-**Enjoy!**
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

@@ -1,9 +1,0 @@
-App\Entity\Currency:
-  currency_usd:
-    id: 1
-    reference: '<(App\Lists\CurrencyReference::USD)>'
-    name: 'USD / $'
-  currency_eur:
-    id: 2
-    reference: '<(App\Lists\CurrencyReference::EUR)>'
-    name: 'EUR / €'

@@ -1,3 +1,0 @@
-# App\Entity\GooglePlace:
-#   google_{1..20}:
-#     id: <current()>
