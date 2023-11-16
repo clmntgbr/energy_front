@@ -1,8 +1,9 @@
 'use client';
 
 import * as sprintf from 'sprintf-js';
-import {GoogleMap, LoadScript, Marker} from '@react-google-maps/api';
+import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 import {useEffect, useMemo, useRef, useState} from "react";
+import Loader from "@/components/Loader";
 
 const initialMapCenter = {
     lat: 48.8066729,
@@ -10,6 +11,12 @@ const initialMapCenter = {
 };
 
 export default function Home() {
+
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string
+    })
+
     const mapRef = useRef<google.maps.Map | null>(null);
     const [markersData, setMarkersData] = useState([]);
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
@@ -47,8 +54,6 @@ export default function Home() {
         if (!center) return;
 
         const newCenter: google.maps.LatLngLiteral = center.toJSON();
-        const zoom: number | undefined = map.getZoom();
-
         setMapCenter(newCenter);
 
         const bounds = map.getBounds();
@@ -92,26 +97,33 @@ export default function Home() {
     }, []);
 
     return (
-      <LoadScript
-          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string}>
-          <GoogleMap
-              mapContainerClassName="map-container"
-              options={mapOptions}
-              mapContainerStyle={containerStyle}
-              zoom={12}
-              center={mapCenter}
-              onLoad={handleMapLoad}
-              onDragEnd={handleMapDragEnd}
-              onZoomChanged={handleMapDragEnd}
-          >
-              {Array.isArray(markersData) &&
-                  markersData.map((marker, index) => (
-                      <Marker
-                          key={index}
-                          position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
-                      />
-                  ))}
-          </GoogleMap>
-      </LoadScript>
+        isLoaded ? (
+            <GoogleMap
+                mapContainerClassName="map-container"
+                options={mapOptions}
+                mapContainerStyle={containerStyle}
+                zoom={12}
+                center={mapCenter}
+                onLoad={handleMapLoad}
+                onDragEnd={handleMapDragEnd}
+                onZoomChanged={handleMapDragEnd}
+            >
+                {
+                    Array.isArray(markersData) && markersData.map((marker, index) => (
+                        <Marker
+                            icon={{
+                                url: marker['hasLowPrices'] ? process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imageLowPath"] : process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imagePath"],
+                                anchor: new google.maps.Point(17, 46),
+                                scaledSize: new google.maps.Size(37, 37)
+                            }}
+                            key={index}
+                            position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
+                        />
+                    ))
+                }
+            </GoogleMap>
+        ) : (
+            <Loader></Loader>
+        )
   );
 }
