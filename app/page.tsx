@@ -6,9 +6,12 @@ import {useEffect, useMemo, useRef, useState} from "react";
 import Loader from "@/components/Loader";
 
 const initialMapCenter = {
-    lat: 48.8066729,
-    lng: 2.3067282
+    lat: 48.853,
+    lng: 2.35,
 };
+
+const initialRadius = 20000;
+let initialLimit = 45;
 
 export default function Home() {
 
@@ -39,10 +42,31 @@ export default function Home() {
     );
 
     const handleMapLoad = (map: google.maps.Map | null) => {
-        console.log('handleMapLoad')
+        let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const newCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                map?.setCenter(newCenter)
+                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", newCenter.lat, newCenter.lng, initialRadius);
+                fetchUrl(formattedString);
+            },
+            function (positionError) {
+                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", initialMapCenter.lat, initialMapCenter.lng, initialRadius);
+                fetchUrl(formattedString);
+            }
+        );
 
         mapRef.current = map;
     };
+
+    const fetchUrl = (url: string) => {
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+                setMarkersData(data['hydra:member']);
+            });
+    }
 
     const handleMapDragEnd = () => {
         console.log('handleMapDragEnd')
@@ -73,12 +97,7 @@ export default function Home() {
 
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", newCenter.lat, newCenter.lng, widthKm * 1000);
-
-        fetch(formattedString)
-            .then((response) => response.json())
-            .then((data) => {
-                setMarkersData(data['hydra:member']);
-        });
+        fetchUrl(formattedString);
     };
 
     const containerStyle = {
@@ -87,13 +106,6 @@ export default function Home() {
     };
 
     useEffect(() => {
-        let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-
-        fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-                setMarkersData(data['hydra:member']);
-            });
     }, []);
 
     return (
@@ -102,7 +114,7 @@ export default function Home() {
                 mapContainerClassName="map-container"
                 options={mapOptions}
                 mapContainerStyle={containerStyle}
-                zoom={12}
+                zoom={13}
                 center={mapCenter}
                 onLoad={handleMapLoad}
                 onDragEnd={handleMapDragEnd}
@@ -113,9 +125,9 @@ export default function Home() {
                         <Marker
                             icon={{
                                 url: marker['hasLowPrices'] ? process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imageLowPath"] : process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imagePath"],
-                                anchor: new google.maps.Point(17, 46),
-                                scaledSize: new google.maps.Size(37, 37)
+                                scaledSize: new google.maps.Size(125, 125)
                             }}
+                            zIndex={marker['hasLowPrices'] ? 1000 : 1}
                             key={index}
                             position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
                         />

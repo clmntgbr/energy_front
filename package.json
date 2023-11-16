@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@react-google-maps/api": "^2.19.2",
+    "@types/googlemaps": "^3.43.3",
     "next": "13.5.6",
     "next-auth": "^4.24.3",
     "react": "^18",
