@@ -129,7 +129,7 @@ export default function Home() {
                         <Marker
                             icon={{
                                 url: marker['hasLowPrices'] ? process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imageLowPath"] : process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imagePath"],
-                                scaledSize: new google.maps.Size(125, 125)
+                                scaledSize: new google.maps.Size(81, 125)
                             }}
                             zIndex={marker['hasLowPrices'] ? 1000 : 1}
                             key={index}
