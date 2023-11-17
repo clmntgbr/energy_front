@@ -22,6 +22,8 @@ export default function Home() {
 
     const mapRef = useRef<google.maps.Map | null>(null);
     const [markersData, setMarkersData] = useState([]);
+    const [userLocation, setUserLocation] = useState({lat: initialMapCenter.lat, lng: initialMapCenter.lng});
+    const [hasUserLocation, setHasUserLocation] = useState(false);
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
 
     const mapOptions = useMemo<google.maps.MapOptions>(
@@ -47,6 +49,8 @@ export default function Home() {
         navigator.geolocation.getCurrentPosition(
             function(position) {
                 const newCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                setHasUserLocation(true);
+                setUserLocation({lat: newCenter.lat(), lng: newCenter.lng()});
                 map?.setCenter(newCenter)
                 const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", newCenter.lat, newCenter.lng, initialRadius, map?.getZoom());
                 fetchUrl(formattedString);
@@ -133,6 +137,20 @@ export default function Home() {
                         />
                     ))
                 }
+
+                {
+                    hasUserLocation ?
+                        <Marker
+                            icon={{
+                                url: '1d49088c27e64658b8bc35cb4812af4d.gif',
+                                scaledSize: new google.maps.Size(100, 100)
+                            }}
+                            zIndex={0}
+                            key={'user'}
+                            position={{ lat: userLocation.lat, lng: userLocation.lng }}
+                        /> : <></>
+                }
+
             </GoogleMap>
         ) : (
             <Loader></Loader>
