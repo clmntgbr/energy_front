@@ -48,11 +48,11 @@ export default function Home() {
             function(position) {
                 const newCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
                 map?.setCenter(newCenter)
-                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", newCenter.lat, newCenter.lng, initialRadius);
+                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", newCenter.lat, newCenter.lng, initialRadius, map?.getZoom());
                 fetchUrl(formattedString);
             },
             function (positionError) {
-                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", initialMapCenter.lat, initialMapCenter.lng, initialRadius);
+                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", initialMapCenter.lat, initialMapCenter.lng, initialRadius, map?.getZoom());
                 fetchUrl(formattedString);
             }
         );
@@ -96,7 +96,7 @@ export default function Home() {
         }
 
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s", newCenter.lat, newCenter.lng, widthKm * 1000);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", newCenter.lat, newCenter.lng, widthKm * 1000, map.getZoom());
         fetchUrl(formattedString);
     };
 
