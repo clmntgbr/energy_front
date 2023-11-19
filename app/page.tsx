@@ -17,16 +17,13 @@ export default function Home() {
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string
     })
 
-    const mapRef = useRef<google.maps.Map | null>(null);
+    let mapRef = useRef<google.maps.Map | null>(null);
     const [markersData, setMarkersData] = useState([]);
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
-    const [activeMarker, setActiveMarker] = useState(null);
+    const [selectedMarker, setSelectedMarker] = useState(null);
 
-    const handleActiveMarker = (marker) => {
-        if (marker === activeMarker) {
-            return;
-        }
-        setActiveMarker(marker);
+    const handleMarkerClick = (marker) => {
+        setSelectedMarker(marker);
     };
 
     const handleMapLoad = (map: google.maps.Map | null) => {
@@ -113,25 +110,33 @@ export default function Home() {
                 center={mapCenter}
                 onLoad={handleMapLoad}
                 onDragEnd={handleMapDragEnd}
-                onClick={() => setActiveMarker(null)}
+                onClick={() => setSelectedMarker(null)}
                 onZoomChanged={handleMapDragEnd}
             >
                 {
                     Array.isArray(markersData) && markersData.map((marker, index) => (
                         <Marker
                             key={marker["uuid"]}
-                            onClick={() => handleActiveMarker(marker["uuid"])}
+                            onClick={() => handleMarkerClick(marker)}
                             position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
                         >
-                            {activeMarker === marker["uuid"] ? (
-                                <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-                                    {/*<img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["imagePath"]}/>*/}
-                                    <div>hello</div>
-                                </InfoWindow>
-                            ) : null}
                         </Marker>
                     ))
                 }
+
+
+                {selectedMarker && (
+                    <InfoWindow
+                        position={{ lat: parseFloat(selectedMarker["address"]["latitude"]) + 0.0002, lng: parseFloat(selectedMarker["address"]["longitude"]) }}
+                        onCloseClick={() => setSelectedMarker(null)}
+                    >
+                        <div>
+                            <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + selectedMarker['imagePath']} alt="Marker Image" />
+                            <h3>{selectedMarker['name']}</h3>
+                            <a href={'gas_station/' + selectedMarker['uuid']} target="_blank" rel="noopener noreferrer">Voir plus</a>
+                        </div>
+                    </InfoWindow>
+                )}
 
             </GoogleMap>
         ) : (

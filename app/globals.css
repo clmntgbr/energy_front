@@ -19,3 +19,41 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.gm-style .gm-style-iw-c {
+  padding: 0;
+}
+
+.gm-style-iw-d {
+  padding: 0;
+  overflow: auto !important;
+}
+
+.gm-ui-hover-effect {
+  top: -3px!important;
+  right: 5px!important;
+}
+
+.gm-ui-hover-effect > span {
+  width: 20px!important;
+  height: 20px!important;
+}
+
+.gm-style h3 {
+  font-size: 15px;
+  position: relative;
+  top: -35px;
+  left: 10px;
+  display: inline;
+  color: white;
+  font-weight: 800;
+  font-family: 'Roboto';
+  background-color: #00000099;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.gm-style img {
+  width: 100%;
+  max-width: 300px;
+}
