@@ -1,8 +1,8 @@
 'use client';
 
 import * as sprintf from 'sprintf-js';
-import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
-import {useEffect, useMemo, useRef, useState} from "react";
+import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
+import {SetStateAction, useEffect, useMemo, useRef, useState} from "react";
 import Loader from "@/components/Loader";
 
 const initialMapCenter = {
@@ -10,12 +10,9 @@ const initialMapCenter = {
     lng: 2.35,
 };
 
-const initialRadius = 20000;
-let initialLimit = 45;
-
 export default function Home() {
 
-    const { isLoaded } = useJsApiLoader({
+    const {isLoaded} = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string
     })
@@ -25,6 +22,7 @@ export default function Home() {
     const [userLocation, setUserLocation] = useState({lat: initialMapCenter.lat, lng: initialMapCenter.lng});
     const [hasUserLocation, setHasUserLocation] = useState(false);
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
+    const [activeMarker, setActiveMarker] = useState(null);
 
     const mapOptions = useMemo<google.maps.MapOptions>(
         () => ({
@@ -43,6 +41,16 @@ export default function Home() {
         []
     );
 
+    const handleActiveMarker = (marker: SetStateAction<null>) => {
+        console.log(marker)
+        console.log(activeMarker)
+        setActiveMarker(null)
+        if (marker === activeMarker) {
+            return;
+        }
+        setActiveMarker(marker);
+    };
+
     const handleMapLoad = (map: google.maps.Map | null) => {
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
 
@@ -52,11 +60,11 @@ export default function Home() {
                 setHasUserLocation(true);
                 setUserLocation({lat: newCenter.lat(), lng: newCenter.lng()});
                 map?.setCenter(newCenter)
-                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", newCenter.lat, newCenter.lng, initialRadius, map?.getZoom());
+                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s", newCenter.lat, newCenter.lng, map?.getZoom());
                 fetchUrl(formattedString);
             },
             function (positionError) {
-                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", initialMapCenter.lat, initialMapCenter.lng, initialRadius, map?.getZoom());
+                const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s", initialMapCenter.lat, initialMapCenter.lng, map?.getZoom());
                 fetchUrl(formattedString);
             }
         );
@@ -84,23 +92,8 @@ export default function Home() {
         const newCenter: google.maps.LatLngLiteral = center.toJSON();
         setMapCenter(newCenter);
 
-        const bounds = map.getBounds();
-
-        let widthKm: number = 20;
-        if (bounds) {
-            const northEast: google.maps.LatLng = bounds.getNorthEast();
-            const southWest: google.maps.LatLng = bounds.getSouthWest();
-            const earthRadiusKm = 6371;
-            const latitude = southWest.lat() * (Math.PI / 180) - northEast.lat() * (Math.PI / 180);
-            const longitude = southWest.lng() * (Math.PI / 180) - northEast.lng() * (Math.PI / 180);
-            const a = Math.sin(latitude / 2) * Math.sin(latitude / 2) + Math.cos(northEast.lat() * (Math.PI / 180)) * Math.cos(southWest.lat() * (Math.PI / 180)) * Math.sin(longitude / 2) * Math.sin(longitude / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-            widthKm = earthRadiusKm * c;
-        }
-
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&zoom=%s", newCenter.lat, newCenter.lng, widthKm * 1000, map.getZoom());
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s", newCenter.lat, newCenter.lng, map.getZoom());
         fetchUrl(formattedString);
     };
 
@@ -123,6 +116,7 @@ export default function Home() {
                 onLoad={handleMapLoad}
                 onDragEnd={handleMapDragEnd}
                 onZoomChanged={handleMapDragEnd}
+                onClick={() => setActiveMarker(null)}
             >
                 {
                     Array.isArray(markersData) && markersData.map((marker, index) => (
@@ -131,12 +125,23 @@ export default function Home() {
                                 url: marker['hasLowPrices'] ? process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imageLowPath"] : process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imagePath"],
                                 scaledSize: new google.maps.Size(81, 125)
                             }}
+                            onClick={() => handleActiveMarker(marker['uuid'])}
                             zIndex={marker['hasLowPrices'] ? 1000 : 1}
                             key={index}
                             position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
-                        />
+                        >
+                            {activeMarker === marker['uuid'] ? (
+                                <InfoWindow
+                                    onCloseClick={() => setActiveMarker(null)}
+                                >
+                                    <div>hello</div>
+                                </InfoWindow>
+                            ) : null}
+                        </Marker>
                     ))
                 }
+
+
 
                 {
                     hasUserLocation ?
