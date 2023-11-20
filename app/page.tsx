@@ -2,7 +2,7 @@
 
 import * as sprintf from 'sprintf-js';
 import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import {useEffect, useRef, useState} from "react";
+import {SetStateAction, useEffect, useRef, useState} from "react";
 import Loader from "@/components/Loader";
 
 const initialMapCenter = {
@@ -22,7 +22,7 @@ export default function Home() {
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
     const [selectedMarker, setSelectedMarker] = useState(null);
 
-    const handleMarkerClick = (marker) => {
+    const handleMarkerClick = (marker: SetStateAction<null>) => {
         setSelectedMarker(marker);
     };
 
@@ -82,6 +82,17 @@ export default function Home() {
         fetchUrl(formattedString);
     };
 
+    const popUp = (marker: never) => {
+        return (
+            <div className={'stations_map'}>
+                <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + marker['imagePath']} alt="Marker Image" />
+                <h3>{marker['name']}</h3>
+                <p className={'address'}>{marker['address']['vicinity']}</p>
+                <a className={'link'} href={'gas_station/' + marker['uuid']} target="_blank">Voir plus</a>
+            </div>
+        );
+    }
+
     useEffect(() => {
     }, []);
 
@@ -127,14 +138,10 @@ export default function Home() {
 
                 {selectedMarker && (
                     <InfoWindow
-                        position={{ lat: parseFloat(selectedMarker["address"]["latitude"]) + 0.0002, lng: parseFloat(selectedMarker["address"]["longitude"]) }}
+                        position={{ lat: parseFloat(selectedMarker["address"]["latitude"]), lng: parseFloat(selectedMarker["address"]["longitude"]) }}
                         onCloseClick={() => setSelectedMarker(null)}
                     >
-                        <div>
-                            <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + selectedMarker['imagePath']} alt="Marker Image" />
-                            <h3>{selectedMarker['name']}</h3>
-                            <a href={'gas_station/' + selectedMarker['uuid']} target="_blank" rel="noopener noreferrer">Voir plus</a>
-                        </div>
+                        {popUp(selectedMarker)}
                     </InfoWindow>
                 )}
 

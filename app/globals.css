@@ -39,7 +39,25 @@ body {
   height: 20px!important;
 }
 
-.gm-style h3 {
+.stations_map .address {
+  max-width: 300px;
+  padding: 0 10px;
+}
+
+.stations_map .link {
+  background-color: #04AA6D!important;
+  border-radius: 5px;
+  font-size: 17px;
+  padding: 6px 18px;
+  display: inherit;
+  margin: 10px auto 10px auto;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  max-width: 140px;
+}
+
+.stations_map h3 {
   font-size: 15px;
   position: relative;
   top: -35px;
@@ -47,13 +65,13 @@ body {
   display: inline;
   color: white;
   font-weight: 800;
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   background-color: #00000099;
   padding: 10px;
   border-radius: 10px;
 }
 
-.gm-style img {
+.stations_map img {
   width: 100%;
   max-width: 300px;
 }
