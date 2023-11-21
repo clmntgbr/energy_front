@@ -169,7 +169,7 @@ export default function Home() {
                     disallowEmptySelection
                     selectionMode="single"
                     selectedKeys={selectedGasType}
-                    onSelectionChange={setSelectedGasType}
+                    // onSelectionChange={setSelectedGasType}
                 >
                     {
                         gasTypesData.map((type, index) => (
