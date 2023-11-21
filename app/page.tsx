@@ -27,6 +27,7 @@ export default function Home() {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [selectedGasType, setSelectedGasType] = useState(new Set(["E10"]));
     const [gasTypeUuid, setGasTypeUuid] = useState(process.env.NEXT_PUBLIC_GAS_TYPE_UUID as string);
+    const [radius, setRadius] = useState(10247);
 
     const selectedValue = useMemo(
         () => Array.from(selectedGasType).join(", ").replaceAll("_", " "),
@@ -43,7 +44,7 @@ export default function Home() {
         });
 
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s&gas_type_uuid=%s", mapCenter.lat, mapCenter.lng, mapRef.current?.getZoom(), uuid);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", mapCenter.lat, mapCenter.lng, radius, uuid);
         fetchGasStationsUrl(formattedString);
     };
 
@@ -72,7 +73,7 @@ export default function Home() {
     const userFound = (position: GeolocationPosition, map: google.maps.Map | null) => {
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const center = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s&gas_type_uuid=%s", center.lat, center.lng, map?.getZoom(), gasTypeUuid);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", center.lat, center.lng, radius, gasTypeUuid);
         fetchGasStationsUrl(formattedString);
         map?.setCenter(center);
     }
@@ -80,7 +81,7 @@ export default function Home() {
     const userNotFound = (map: google.maps.Map | null) => {
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const center = new google.maps.LatLng(initialMapCenter.lat, initialMapCenter.lng);
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s&gas_type_uuid=%s", initialMapCenter.lat, initialMapCenter.lng, map?.getZoom(), gasTypeUuid);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", initialMapCenter.lat, initialMapCenter.lng, radius, gasTypeUuid);
         fetchGasStationsUrl(formattedString);
         map?.setCenter(center);
     }
@@ -103,7 +104,8 @@ export default function Home() {
 
     const handleMapDragEnd = () => {
         console.log('handleMapDragEnd')
-        console.log(gasTypeUuid)
+
+        let newRadius = radius;
 
         const map = mapRef.current;
         if (!map) return;
@@ -114,8 +116,21 @@ export default function Home() {
         const newCenter: google.maps.LatLngLiteral = center.toJSON();
         setMapCenter(newCenter);
 
+        const bounds = map.getBounds();
+        if (bounds) {
+            const ne = bounds.getNorthEast();
+            const sw = bounds.getSouthWest();
+
+            if (ne && sw) {
+                const latDiff = Math.abs(ne.lat() - sw.lat());
+                const metersPerDegree = 111000;
+                newRadius = latDiff * metersPerDegree;
+                setRadius(newRadius);
+            }
+        }
+
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s&gas_type_uuid=%s", newCenter.lat, newCenter.lng, map.getZoom(), gasTypeUuid);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", newCenter.lat, newCenter.lng, newRadius, gasTypeUuid);
         fetchGasStationsUrl(formattedString);
     };
 
@@ -200,7 +215,6 @@ export default function Home() {
                             </Marker>
                         ))
                     }
-
 
                     {selectedMarker && (
                         <InfoWindow

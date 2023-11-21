@@ -42,8 +42,6 @@ export default function Home() {
     );
 
     const handleActiveMarker = (marker: SetStateAction<null>) => {
-        console.log(marker)
-        console.log(activeMarker)
         setActiveMarker(null)
         if (marker === activeMarker) {
             return;
@@ -91,6 +89,22 @@ export default function Home() {
 
         const newCenter: google.maps.LatLngLiteral = center.toJSON();
         setMapCenter(newCenter);
+
+        const bounds = map.getBounds();
+        let widthKm: number = 20;
+        if (bounds) {
+            const northEast: google.maps.LatLng = bounds.getNorthEast();
+            const southWest: google.maps.LatLng = bounds.getSouthWest();
+            const earthRadiusKm = 6371;
+            const latitude = southWest.lat() * (Math.PI / 180) - northEast.lat() * (Math.PI / 180);
+            const longitude = southWest.lng() * (Math.PI / 180) - northEast.lng() * (Math.PI / 180);
+            const a = Math.sin(latitude / 2) * Math.sin(latitude / 2) + Math.cos(northEast.lat() * (Math.PI / 180)) * Math.cos(southWest.lat() * (Math.PI / 180)) * Math.sin(longitude / 2) * Math.sin(longitude / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            widthKm = earthRadiusKm * c;
+        }
+
+        console.log(widthKm);
 
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s", newCenter.lat, newCenter.lng, map.getZoom());
