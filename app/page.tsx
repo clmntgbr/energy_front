@@ -48,6 +48,11 @@ export default function Home() {
         fetchGasStationsUrl(formattedString);
     };
 
+    const onGasTypeSelected = (key: Key) => {
+        // @ts-ignore
+        setSelectedGasType(key);
+    };
+
     const handleMarkerClick = (marker: SetStateAction<null>) => {
         setSelectedMarker(marker);
     };
@@ -90,6 +95,7 @@ export default function Home() {
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
+                setSelectedMarker(null);
                 setMarkersData(data['hydra:member']);
             });
     }
@@ -152,32 +158,34 @@ export default function Home() {
     return (
             isLoaded ? (
                 <>
-
-            <Dropdown>
-                <DropdownTrigger>
-                    <Button
-                        variant="bordered"
-                        className="capitalize"
+                <Dropdown>
+                    <DropdownTrigger>
+                        <Button
+                            variant="bordered"
+                            className="capitalize"
+                        >
+                            {selectedValue}
+                        </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                        onAction={(key) => onGasTypesChange(key as string)}
+                        variant="flat"
+                        disallowEmptySelection
+                        selectionMode="single"
+                        selectedKeys={selectedGasType}
+                        onSelectionChange={(key) => onGasTypeSelected(key as string)}
                     >
-                        {selectedValue}
-                    </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                    onAction={(key) => onGasTypesChange(key as string)}
-                    aria-label="Single selection example"
-                    variant="flat"
-                    disallowEmptySelection
-                    selectionMode="single"
-                    selectedKeys={selectedGasType}
-                    // onSelectionChange={setSelectedGasType}
-                >
-                    {
-                        gasTypesData.map((type, index) => (
-                            <DropdownItem key={type['name']}>{type['name']}</DropdownItem>
-                        ))
-                    }
-                </DropdownMenu>
-            </Dropdown>
+                        {
+                            gasTypesData.map((type, index) => (
+                                <DropdownItem
+                                    key={type['name']}
+                                    className={`gas_types gas_type_${type['reference']}`}
+                                >{type['name']}
+                                </DropdownItem>
+                            ))
+                        }
+                    </DropdownMenu>
+                </Dropdown>
 
                 <GoogleMap
                     mapContainerClassName="map-container"
