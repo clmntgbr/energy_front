@@ -60,34 +60,40 @@ export default function Home() {
     const handleMapLoad = (map: google.maps.Map | null) => {
         console.log("handleMapLoad");
 
+        if (!map) return;
+
         const url: string = process.env.NEXT_PUBLIC_GAS_TYPES as string;
         fetchGasTypesUrl(url);
 
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                userFound(position, map);
-            },
-            function (positionError) {
-                userNotFound(map);
-            }
-        );
+        google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    userFound(position, map);
+                },
+                function (positionError) {
+                    userNotFound(map);
+                }
+            );
 
-        mapRef.current = map;
+            mapRef.current = map;
+        });
     };
 
-    const userFound = (position: GeolocationPosition, map: google.maps.Map | null) => {
+    const userFound = (position: GeolocationPosition, map: google.maps.Map) => {
+        const newRadius = getRadius(map);
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const center = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", center.lat, center.lng, radius, gasTypeUuid);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", center.lat, center.lng, newRadius, gasTypeUuid);
         fetchGasStationsUrl(formattedString);
         map?.setCenter(center);
         setMapCenter({lat: position.coords.latitude, lng: position.coords.longitude});
     }
 
-    const userNotFound = (map: google.maps.Map | null) => {
+    const userNotFound = (map: google.maps.Map) => {
+        const newRadius = getRadius(map);
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const center = new google.maps.LatLng(initialMapCenter.lat, initialMapCenter.lng);
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", initialMapCenter.lat, initialMapCenter.lng, radius, gasTypeUuid);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", initialMapCenter.lat, initialMapCenter.lng, newRadius, gasTypeUuid);
         fetchGasStationsUrl(formattedString);
         map?.setCenter(center);
     }
@@ -112,8 +118,6 @@ export default function Home() {
     const handleMapDragEnd = () => {
         console.log('handleMapDragEnd')
 
-        let newRadius = radius;
-
         const map = mapRef.current;
         if (!map) return;
 
@@ -123,7 +127,20 @@ export default function Home() {
         const newCenter: google.maps.LatLngLiteral = center.toJSON();
         setMapCenter(newCenter);
 
+        const newRadius = getRadius(map);
+
+        const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", newCenter.lat, newCenter.lng, newRadius, gasTypeUuid);
+        fetchGasStationsUrl(formattedString);
+    };
+
+
+    const getRadius = (map: google.maps.Map) => {
+
+        let newRadius = radius;
+
         const bounds = map.getBounds();
+
         if (bounds) {
             const ne = bounds.getNorthEast();
             const sw = bounds.getSouthWest();
@@ -133,13 +150,13 @@ export default function Home() {
                 const metersPerDegree = 111000;
                 newRadius = latDiff * metersPerDegree;
                 setRadius(newRadius);
+                console.log(newRadius)
             }
         }
 
-        const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", newCenter.lat, newCenter.lng, newRadius, gasTypeUuid);
-        fetchGasStationsUrl(formattedString);
-    };
+
+        return newRadius;
+    }
 
     const popUp = (marker: never) => {
         const url = sprintf.sprintf('https://google.com/maps/search/?query=%s,%s&api=1', marker['address']['latitude'], marker['address']['longitude']);
