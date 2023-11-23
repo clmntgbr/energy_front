@@ -150,7 +150,6 @@ export default function Home() {
                 const metersPerDegree = 111000;
                 newRadius = latDiff * metersPerDegree;
                 setRadius(newRadius);
-                console.log(newRadius)
             }
         }
 
