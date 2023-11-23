@@ -20,6 +20,20 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.google_map_link {
+  font-size: 28px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline;
+  color: white;
+  font-weight: 800;
+  font-family: 'Roboto', sans-serif;
+  background-color: #00000099;
+  padding: 6px;
+  border-radius: 100%;
+}
+
 .gm-style .gm-style-iw-c {
   padding: 0;
 }
@@ -48,7 +62,7 @@ body {
 
 .stations_map .address_city {
   max-width: 350px;
-  padding: 0 10px 0 28px;
+  padding: 0 10px;
   top: -10px;
   position: relative;
 }
@@ -91,10 +105,10 @@ body {
 }
 
 .stations_map h3 {
-  font-size: 15px;
+  font-size: 16px;
   position: relative;
   top: -35px;
-  left: 10px;
+  left: 8px;
   display: inline;
   color: white;
   font-weight: 800;

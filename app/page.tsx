@@ -5,8 +5,8 @@ import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/
 import {SetStateAction, useEffect, useMemo, useRef, useState} from "react";
 import Loader from "@/components/Loader";
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
-import {FaLocationDot} from "react-icons/fa6";
 import {Key} from "swr";
+import {TbMapShare} from "react-icons/tb";
 
 const initialMapCenter = {
     lat: 48.853,
@@ -81,6 +81,7 @@ export default function Home() {
         const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", center.lat, center.lng, radius, gasTypeUuid);
         fetchGasStationsUrl(formattedString);
         map?.setCenter(center);
+        setMapCenter({lat: position.coords.latitude, lng: position.coords.longitude});
     }
 
     const userNotFound = (map: google.maps.Map | null) => {
@@ -141,11 +142,13 @@ export default function Home() {
     };
 
     const popUp = (marker: never) => {
+        const url = sprintf.sprintf('https://google.com/maps/search/?query=%s,%s&api=1', marker['address']['latitude'], marker['address']['longitude']);
         return (
             <div className={'stations_map'}>
+                <a className={'google_map_link'} href={url} target="_blank"><TbMapShare></TbMapShare></a>
                 <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + marker['imagePath']} alt="Marker Image" />
                 <h3>{marker['name']}</h3>
-                <p className={'address_street'}><FaLocationDot /> {marker['address']['number']} {marker['address']['street']}</p>
+                <p className={'address_street'}>{marker['address']['number']} {marker['address']['street']}</p>
                 <p className={'address_city'}>{marker['address']['postalCode']}, {marker['address']['city']}</p>
                 <a className={'link'} href={'gas_station/' + marker['uuid']} target="_blank">Voir plus</a>
             </div>
@@ -158,82 +161,83 @@ export default function Home() {
     return (
             isLoaded ? (
                 <>
-                <Dropdown>
-                    <DropdownTrigger>
-                        <Button
-                            variant="bordered"
-                            className="capitalize"
+                    <Dropdown>
+                        <DropdownTrigger>
+                            <Button
+                                variant="bordered"
+                                className="capitalize"
+                            >
+                                {selectedValue}
+                            </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                            onAction={(key) => onGasTypesChange(key as string)}
+                            variant="flat"
+                            disallowEmptySelection
+                            selectionMode="single"
+                            selectedKeys={selectedGasType}
+                            onSelectionChange={(key) => onGasTypeSelected(key as string)}
                         >
-                            {selectedValue}
-                        </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                        onAction={(key) => onGasTypesChange(key as string)}
-                        variant="flat"
-                        disallowEmptySelection
-                        selectionMode="single"
-                        selectedKeys={selectedGasType}
-                        onSelectionChange={(key) => onGasTypeSelected(key as string)}
+                            {
+                                gasTypesData.map((type, index) => (
+                                    <DropdownItem
+                                        key={type['name']}
+                                        className={`gas_types gas_type_${type['reference']}`}
+                                    >{type['name']}
+                                    </DropdownItem>
+                                ))
+                            }
+                        </DropdownMenu>
+                    </Dropdown>
+
+                    <GoogleMap
+                        mapContainerClassName="map-container"
+                        options={{
+                            disableDefaultUI: false,
+                            clickableIcons: false,
+                            scrollwheel: true,
+                            fullscreenControl: false,
+                            keyboardShortcuts: false,
+                            rotateControl: false,
+                            streetViewControl: false,
+                            mapTypeControl: true,
+                            mapTypeControlOptions: {
+                                mapTypeIds: ['roadmap'],
+                            },
+                        }}
+                        mapContainerStyle={{
+                            width: '100%',
+                            height: 'calc(100% - 4rem)',
+                        }}
+                        zoom={13}
+                        center={mapCenter}
+                        onLoad={handleMapLoad}
+                        onDragEnd={handleMapDragEnd}
+                        onClick={() => setSelectedMarker(null)}
+                        onZoomChanged={handleMapDragEnd}
                     >
                         {
-                            gasTypesData.map((type, index) => (
-                                <DropdownItem
-                                    key={type['name']}
-                                    className={`gas_types gas_type_${type['reference']}`}
-                                >{type['name']}
-                                </DropdownItem>
+                            Array.isArray(markersData) && markersData.map((marker, index) => (
+                                <Marker
+                                    key={marker["uuid"]}
+                                    onClick={() => handleMarkerClick(marker)}
+                                    position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
+                                >
+                                </Marker>
                             ))
                         }
-                    </DropdownMenu>
-                </Dropdown>
 
-                <GoogleMap
-                    mapContainerClassName="map-container"
-                    options={{
-                        disableDefaultUI: false,
-                        clickableIcons: false,
-                        scrollwheel: true,
-                        fullscreenControl: false,
-                        keyboardShortcuts: false,
-                        rotateControl: false,
-                        streetViewControl: false,
-                        mapTypeControl: true,
-                        mapTypeControlOptions: {
-                            mapTypeIds: ['roadmap'],
-                        },
-                    }}
-                    mapContainerStyle={{
-                        width: '100%',
-                        height: 'calc(100% - 4rem)',
-                    }}
-                    zoom={13}
-                    center={mapCenter}
-                    onLoad={handleMapLoad}
-                    onDragEnd={handleMapDragEnd}
-                    onClick={() => setSelectedMarker(null)}
-                    onZoomChanged={handleMapDragEnd}
-                >
-                    {
-                        Array.isArray(markersData) && markersData.map((marker, index) => (
-                            <Marker
-                                key={marker["uuid"]}
-                                onClick={() => handleMarkerClick(marker)}
-                                position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
+                        {selectedMarker && (
+                            <InfoWindow
+                                position={{ lat: parseFloat(selectedMarker["address"]["latitude"]), lng: parseFloat(selectedMarker["address"]["longitude"]) }}
+                                onCloseClick={() => setSelectedMarker(null)}
                             >
-                            </Marker>
-                        ))
-                    }
+                                {popUp(selectedMarker)}
+                            </InfoWindow>
+                        )}
 
-                    {selectedMarker && (
-                        <InfoWindow
-                            position={{ lat: parseFloat(selectedMarker["address"]["latitude"]), lng: parseFloat(selectedMarker["address"]["longitude"]) }}
-                            onCloseClick={() => setSelectedMarker(null)}
-                        >
-                            {popUp(selectedMarker)}
-                        </InfoWindow>
-                    )}
-
-                </GoogleMap></>
+                    </GoogleMap>
+                </>
             ) : (
                 <Loader></Loader>
             )
