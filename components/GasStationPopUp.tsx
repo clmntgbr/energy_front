@@ -4,7 +4,6 @@ import {TbMapShare} from "react-icons/tb";
 import Rating from "@/components/Rating";
 
 function GasStationPopUp(marker: never) {
-    console.log(marker['googlePlace']['rating'])
     const url = sprintf.sprintf('https://google.com/maps/search/?query=%s,%s&api=1', marker['address']['latitude'], marker['address']['longitude']);
     return (
         <div className={'stations_map'}>
@@ -15,23 +14,42 @@ function GasStationPopUp(marker: never) {
             <a className={'address_street'} onClick={() => handleCopy(marker)}>{marker['address']['number']} {marker['address']['street']}</a>
             <a className={'address_city'} onClick={() => handleCopy(marker)}>{marker['address']['postalCode']}, {marker['address']['city']}</a>
             <div className="container_prices">
-                {generateElements(marker)}
+                {getLastPrices(marker)}
+            </div>
+            <div className="container_services">
+                {getServices(marker)}
             </div>
             <a className={'link'} href={'gas_station/' + marker['uuid']} target="_blank">Accèder à la station</a>
         </div>
     );
 }
 
-const generateElements = (marker: never) => {
-    const prices = marker["lastPrices"];
+const getLastPrices = (marker: never) => {
+    const lastPrices = marker["lastPrices"];
     let elements: React.JSX.Element[] = [];
 
-    prices.map((price: { [x: string]: any; }, index: any) => {
+    lastPrices.map((price: { [x: string]: any; }, index: any) => {
         elements.push((
             <div className="box_prices" key={price['gasPriceId']}>
                 <p className={`box_price_name`}>{price['gasTypeLabel']}</p>
                 <p className={`box_price ${price['gasPriceDifference']}`}>{price['gasPriceValue']/1000}€</p>
             </div>
+        ));
+    });
+
+    return elements;
+};
+
+const getServices = (marker: never) => {
+    const gasServices = marker["gasServices"];
+    let elements: React.JSX.Element[] = [];
+
+    gasServices.map((gasService: { [x: string]: any; }, index: any) => {
+        const isLastElement = index === gasServices.length - 1;
+        const comma = isLastElement ? '' : ', ';
+
+        elements.push((
+            <span className={`gas_service`} key={gasService['uuid']}>{gasService['name']}{comma} </span>
         ));
     });
 

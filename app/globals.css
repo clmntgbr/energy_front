@@ -65,8 +65,18 @@ body {
   padding: 0 10px;
 }
 
+.container_services  .gas_service:nth-child(odd) {
+  color: black;
+  font-weight: bold;
+}
+
 .stations_map .address_street svg{
   display: inline;
+}
+
+.container_services {
+  max-width: 350px;
+  padding: 10px;
 }
 
 .stations_map .link {
