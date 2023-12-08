@@ -7,7 +7,7 @@ this is the frontend part of the Gas Project, who collect all price from gas sta
 1. Clone https://github.com/clmntgbr/setup and run `make build start` for the setup project
 2. Clone https://github.com/clmntgbr/gas_back and follow instructions there
 3. Clone this repo
-4. Run `cp .env.dist .env` and change some variable
+4. Run `cp .env.dist .env` and change some variable (GoogleApiKey)
 5. Run `make build start` to start docker
 6. You can run `make help` to see all commands available
 
