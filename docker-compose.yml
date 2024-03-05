@@ -18,9 +18,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"
-      - "traefik.http.routers.gas_front.rule=Host(`front.traefik.me`)"
-      - "traefik.http.routers.gas_front.tls=true"
-      - "traefik.http.services.gas_front.loadbalancer.server.port=3000"
+      - "traefik.http.routers.energy_front.rule=Host(`front.traefik.me`)"
+      - "traefik.http.routers.energy_front.tls=true"
+      - "traefik.http.services.energy_front.loadbalancer.server.port=3000"
 
 networks:
   service:

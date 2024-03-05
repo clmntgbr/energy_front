@@ -6,10 +6,10 @@ import useSWR from "swr";
 const fetcher = (url: RequestInfo) => fetch(url).then((res) => res.json());
 
 
-export default function GetEnergyStationByUuid({ params }: { params: { uuid: string } }) {
+export default function GetenergyStations() {
   const { data, error, isLoading } = useSWR(
-    "https://back.traefik.me/api/energy_stations/" + params.uuid,
+    "https://back.traefik.me/api/energy_stations",
     fetcher
   );
-  return <p>Energy Station by UUid {params.uuid}</p>;
+  return <p>energy Stations</p>;
 }

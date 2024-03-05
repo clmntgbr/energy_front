@@ -1,3 +1,3 @@
-export interface GasPrice {
+export interface EnergyPrice {
     uuid: string
 }

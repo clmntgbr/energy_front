@@ -1,3 +1,3 @@
-export interface GasStation {
+export interface EnergyStation {
     uuid: string
 }

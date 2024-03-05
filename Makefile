@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROJECT_NAME = gas
+PROJECT_NAME = energy
 
 DOCKER_COMPOSE = docker-compose -p $(PROJECT_NAME)
 

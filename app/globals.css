@@ -65,7 +65,7 @@ body {
   padding: 0 10px;
 }
 
-.container_services  .gas_service:nth-child(odd) {
+.container_services  .energy_service:nth-child(odd) {
   color: black;
   font-weight: bold;
 }
@@ -92,7 +92,7 @@ body {
   max-width: 190px;
 }
 
-.gas_types {
+.energy_types {
   border: 1px solid black;
   border-radius: 100%;
   width: 50px;
@@ -103,7 +103,7 @@ body {
   overflow: hidden;
 }
 
-.gas_types span.flex-1{
+.energy_types span.flex-1{
   width: 50px;
   display: block;
 }

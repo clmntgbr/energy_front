@@ -3,12 +3,12 @@ import * as sprintf from "sprintf-js";
 import { TbMapShare } from "react-icons/tb";
 import Rating from "@/components/Rating";
 
-function EnergyStationPopUp(marker: never) {
+function energyStationPopUp(marker: never) {
     const url = sprintf.sprintf('https://google.com/maps/search/?query=%s,%s&api=1', marker['address']['latitude'], marker['address']['longitude']);
     return (
         <div className={'stations_map'}>
             <a className={'google_map_link'} href={url} target="_blank"><TbMapShare></TbMapShare></a>
-            <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + marker['imagePath']} alt="Marker Image" />
+            <img src={process.env.NEXT_PUBLIC_energy_BACK_URL + marker['imagePath']} alt="Marker Image" />
             <h3>{marker['name']}</h3>
             <Rating initialValue={marker['googlePlace']['rating']}></Rating>
             <a className={'address_street'} onClick={() => handleCopy(marker)}>{marker['address']['number']} {marker['address']['street']}</a>
@@ -61,4 +61,4 @@ const handleCopy = (marker: never) => {
     navigator.clipboard.writeText(address);
 };
 
-export default EnergyStationPopUp;
+export default energyStationPopUp;

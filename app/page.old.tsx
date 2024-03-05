@@ -1,8 +1,8 @@
 'use client';
 
 import * as sprintf from 'sprintf-js';
-import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import {SetStateAction, useEffect, useMemo, useRef, useState} from "react";
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import Loader from "@/components/Loader";
 
 const initialMapCenter = {
@@ -12,14 +12,14 @@ const initialMapCenter = {
 
 export default function Home() {
 
-    const {isLoaded} = useJsApiLoader({
+    const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string
     })
 
     const mapRef = useRef<google.maps.Map | null>(null);
     const [markersData, setMarkersData] = useState([]);
-    const [userLocation, setUserLocation] = useState({lat: initialMapCenter.lat, lng: initialMapCenter.lng});
+    const [userLocation, setUserLocation] = useState({ lat: initialMapCenter.lat, lng: initialMapCenter.lng });
     const [hasUserLocation, setHasUserLocation] = useState(false);
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
     const [activeMarker, setActiveMarker] = useState(null);
@@ -53,10 +53,10 @@ export default function Home() {
         let url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
 
         navigator.geolocation.getCurrentPosition(
-            function(position) {
+            function (position) {
                 const newCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
                 setHasUserLocation(true);
-                setUserLocation({lat: newCenter.lat(), lng: newCenter.lng()});
+                setUserLocation({ lat: newCenter.lat(), lng: newCenter.lng() });
                 map?.setCenter(newCenter)
                 const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&zoom=%s", newCenter.lat, newCenter.lng, map?.getZoom());
                 fetchUrl(formattedString);
@@ -136,7 +136,7 @@ export default function Home() {
                     Array.isArray(markersData) && markersData.map((marker, index) => (
                         <Marker
                             icon={{
-                                url: marker['hasLowPrices'] ? process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imageLowPath"] : process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["gasStationBrand"]["imagePath"],
+                                url: marker['hasLowPrices'] ? process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["energyStationBrand"]["imageLowPath"] : process.env.NEXT_PUBLIC_GAS_BACK_URL + marker["energyStationBrand"]["imagePath"],
                                 scaledSize: new google.maps.Size(81, 125)
                             }}
                             onClick={() => handleActiveMarker(marker['uuid'])}
@@ -174,5 +174,5 @@ export default function Home() {
         ) : (
             <Loader></Loader>
         )
-  );
+    );
 }

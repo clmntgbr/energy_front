@@ -1,12 +1,12 @@
 'use client';
 
 import * as sprintf from 'sprintf-js';
-import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import {SetStateAction, useEffect, useMemo, useRef, useState} from "react";
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import Loader from "@/components/Loader";
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
-import {Key} from "swr";
-import GasStationPopUp from "@/components/GasStationPopUp";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Key } from "swr";
+import EnergyStationPopUp from "@/components/EnergyStationPopUp";
 
 const initialMapCenter = {
     lat: 48.853,
@@ -15,42 +15,42 @@ const initialMapCenter = {
 
 export default function GetGoogleMap() {
 
-    const {isLoaded} = useJsApiLoader({
+    const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string
     })
 
     let mapRef = useRef<google.maps.Map | null>(null);
     const [markersData, setMarkersData] = useState([]);
-    const [gasTypesData, setGasTypesData] = useState([]);
+    const [energyTypesData, setEnergyTypesData] = useState([]);
     const [mapCenter, setMapCenter] = useState(initialMapCenter);
     const [selectedMarker, setSelectedMarker] = useState(null);
-    const [selectedGasType, setSelectedGasType] = useState(new Set(["E10"]));
-    const [gasTypeUuid, setGasTypeUuid] = useState(process.env.NEXT_PUBLIC_GAS_TYPE_UUID as string);
+    const [selectedEnergyType, setSelectedEnergyType] = useState(new Set(["E10"]));
+    const [energyTypeUuid, setEnergyTypeUuid] = useState(process.env.NEXT_PUBLIC_GAS_TYPE_UUID as string);
     const [radius, setRadius] = useState(10247);
 
     const selectedValue = useMemo(
-        () => Array.from(selectedGasType).join(", ").replaceAll("_", " "),
-        [selectedGasType]
+        () => Array.from(selectedEnergyType).join(", ").replaceAll("_", " "),
+        [selectedEnergyType]
     );
 
-    const onGasTypesChange = (key: Key) => {
-        let uuid = gasTypeUuid;
-        gasTypesData.map((type, index) => {
+    const onEnergyTypesChange = (key: Key) => {
+        let uuid = energyTypeUuid;
+        energyTypesData.map((type, index) => {
             if (type['name'] === key) {
                 uuid = type['uuid'];
-                setGasTypeUuid(type['uuid']);
+                setEnergyTypeUuid(type['uuid']);
             }
         });
 
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", mapCenter.lat, mapCenter.lng, radius, uuid);
-        fetchGasStationsUrl(formattedString);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&energy_type_uuid=%s", mapCenter.lat, mapCenter.lng, radius, uuid);
+        fetchEnergyStationsUrl(formattedString);
     };
 
-    const onGasTypeSelected = (key: Key) => {
+    const onEnergyTypeSelected = (key: Key) => {
         // @ts-ignore
-        setSelectedGasType(key);
+        setSelectedEnergyType(key);
     };
 
     const handleMarkerClick = (marker: SetStateAction<null>) => {
@@ -63,11 +63,11 @@ export default function GetGoogleMap() {
         if (!map) return;
 
         const url: string = process.env.NEXT_PUBLIC_GAS_TYPES as string;
-        fetchGasTypesUrl(url);
+        fetchEnergyTypesUrl(url);
 
-        google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+        google.maps.event.addListenerOnce(map, 'tilesloaded', function () {
             navigator.geolocation.getCurrentPosition(
-                function(position) {
+                function (position) {
                     userFound(position, map);
                 },
                 function (positionError) {
@@ -83,22 +83,22 @@ export default function GetGoogleMap() {
         const newRadius = getRadius(map);
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const center = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", center.lat, center.lng, newRadius, gasTypeUuid);
-        fetchGasStationsUrl(formattedString);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&energy_type_uuid=%s", center.lat, center.lng, newRadius, energyTypeUuid);
+        fetchEnergyStationsUrl(formattedString);
         map?.setCenter(center);
-        setMapCenter({lat: position.coords.latitude, lng: position.coords.longitude});
+        setMapCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
     }
 
     const userNotFound = (map: google.maps.Map) => {
         const newRadius = getRadius(map);
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
         const center = new google.maps.LatLng(initialMapCenter.lat, initialMapCenter.lng);
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", initialMapCenter.lat, initialMapCenter.lng, newRadius, gasTypeUuid);
-        fetchGasStationsUrl(formattedString);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&energy_type_uuid=%s", initialMapCenter.lat, initialMapCenter.lng, newRadius, energyTypeUuid);
+        fetchEnergyStationsUrl(formattedString);
         map?.setCenter(center);
     }
 
-    const fetchGasStationsUrl = (url: string) => {
+    const fetchEnergyStationsUrl = (url: string) => {
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
@@ -107,11 +107,11 @@ export default function GetGoogleMap() {
             });
     }
 
-    const fetchGasTypesUrl = (url: string) => {
+    const fetchEnergyTypesUrl = (url: string) => {
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
-                setGasTypesData(data['hydra:member']);
+                setEnergyTypesData(data['hydra:member']);
             });
     }
 
@@ -130,8 +130,8 @@ export default function GetGoogleMap() {
         const newRadius = getRadius(map);
 
         const url: string = process.env.NEXT_PUBLIC_GAS_STATIONS_MAP as string;
-        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&gas_type_uuid=%s", newCenter.lat, newCenter.lng, newRadius, gasTypeUuid);
-        fetchGasStationsUrl(formattedString);
+        const formattedString = sprintf.sprintf(url + "?latitude=%s&longitude=%s&radius=%s&energy_type_uuid=%s", newCenter.lat, newCenter.lng, newRadius, energyTypeUuid);
+        fetchEnergyStationsUrl(formattedString);
     };
 
 
@@ -173,18 +173,18 @@ export default function GetGoogleMap() {
                         </Button>
                     </DropdownTrigger>
                     <DropdownMenu
-                        onAction={(key) => onGasTypesChange(key as string)}
+                        onAction={(key) => onEnergyTypesChange(key as string)}
                         variant="flat"
                         disallowEmptySelection
                         selectionMode="single"
-                        selectedKeys={selectedGasType}
-                        onSelectionChange={(key) => onGasTypeSelected(key as string)}
+                        selectedKeys={selectedEnergyType}
+                        onSelectionChange={(key) => onEnergyTypeSelected(key as string)}
                     >
                         {
-                            gasTypesData.map((type, index) => (
+                            energyTypesData.map((type, index) => (
                                 <DropdownItem
                                     key={type['name']}
-                                    className={`gas_types gas_type_${type['reference']}`}
+                                    className={`energy_types energy_type_${type['reference']}`}
                                 >{type['name']}
                                 </DropdownItem>
                             ))
@@ -234,7 +234,7 @@ export default function GetGoogleMap() {
                             position={{ lat: parseFloat(selectedMarker["address"]["latitude"]), lng: parseFloat(selectedMarker["address"]["longitude"]) }}
                             onCloseClick={() => setSelectedMarker(null)}
                         >
-                            {GasStationPopUp(selectedMarker)}
+                            {EnergyStationPopUp(selectedMarker)}
                         </InfoWindow>
                     )}
 
