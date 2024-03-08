@@ -8,7 +8,7 @@ function energyStationPopUp(marker: never) {
     return (
         <div className={'stations_map'}>
             <a className={'google_map_link'} href={url} target="_blank"><TbMapShare></TbMapShare></a>
-            <img src={process.env.NEXT_PUBLIC_energy_BACK_URL + marker['imagePath']} alt="Marker Image" />
+            <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + marker['imagePath']} alt="Marker Image" />
             <h3>{marker['name']}</h3>
             <Rating initialValue={marker['googlePlace']['rating']}></Rating>
             <a className={'address_street'} onClick={() => handleCopy(marker)}>{marker['address']['number']} {marker['address']['street']}</a>
@@ -17,14 +17,14 @@ function energyStationPopUp(marker: never) {
                 {getLastPrices(marker)}
             </div>
             <div className="container_services">
-                {getServices(marker)}
+                {/* {getServices(marker)} */}
             </div>
             <a className={'link'} href={'energy_station/' + marker['uuid']} target="_blank">Accèder à la station</a>
         </div>
     );
 }
 
-const getLastPrices = (marker: never) => {
+const getLastPrices = (marker: any) => {
     const lastPrices = marker["lastPrices"];
     let elements: React.JSX.Element[] = [];
 
@@ -40,7 +40,7 @@ const getLastPrices = (marker: never) => {
     return elements;
 };
 
-const getServices = (marker: never) => {
+const getServices = (marker: any) => {
     const energyServices = marker["energyServices"];
     let elements: React.JSX.Element[] = [];
 

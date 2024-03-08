@@ -1,14 +1,13 @@
 'use client';
 
-import { MapContainer, Marker, Popup, Rectangle, TileLayer, useMap, useMapEvent, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css'
 import "leaflet-defaulticon-compatibility";
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as sprintf from 'sprintf-js';
-import L, { DragEndEvent, DragEndEventHandlerFn, LatLng, LeafletEventHandlerFnMap } from 'leaflet';
-
-import heart from "../public/1d49088c27e64658b8bc35cb4812af4d.gif";
+import L, { DragEndEvent, LatLng, Point } from 'leaflet';
+import energyStationPopUp from './EnergyStationPopUp';
 
 const initialMapCenter = {
     lat: 48.853,
@@ -72,11 +71,6 @@ export default function GetMap() {
                 const zoom = event.target.getZoom();
                 dragEndEnergyStations(map, LatLng.lat, LatLng.lng, zoom);
             },
-            zoomlevelschange(event) {
-                const LatLng = event.target.getCenter();
-                const zoom = event.target.getZoom();
-                dragEndEnergyStations(map, LatLng.lat, LatLng.lng, zoom);
-            }
         });
 
         return userPosition === null ? null : (
@@ -87,7 +81,6 @@ export default function GetMap() {
                     iconSize: [50, 50]
                 })}
             >
-                <Popup>You are here</Popup>
             </Marker>
         );
     }
@@ -152,7 +145,8 @@ export default function GetMap() {
             (position) => {
                 if (!leafletMap) return;
                 if (!leafletMap.current) return;
-                leafletMap.current.locate();
+                const current: any = leafletMap.current;
+                current.locate();
             },
             (error) => {
                 if (!leafletMap) return;
@@ -180,9 +174,26 @@ export default function GetMap() {
                 Array.isArray(markers) && markers.map((marker, index) => (
                     <Marker
                         key={marker["uuid"]}
-                        // onClick={() => handleMarkerClick(marker)}
+                        eventHandlers={{
+                            click: () => {
+                                if (!leafletMap) return;
+                                if (!leafletMap.current) return;
+
+                                console.log(leafletMap);
+                                // leafletMap.current.flyTo({ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }, 13);
+                            },
+                        }}
                         position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
                     >
+                        <Popup
+                            autoPan={true}
+                            keepInView={false}
+                            autoPanPaddingBottomRight={new Point(10, 10)}
+                            autoPanPaddingTopLeft={new Point(10, 10)}
+                            autoPanPadding={new Point(10, 10)}
+                        >
+                            {energyStationPopUp(marker)}
+                        </Popup>
                     </Marker>
                 ))
             }

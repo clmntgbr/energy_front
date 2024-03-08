@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: #f9fafb;;
+  background: #f9fafb;
 }
 
 .loader {
@@ -12,7 +12,7 @@ body {
   position: relative;
 }
 
-.loader > div {
+.loader>div {
   margin: 0;
   position: absolute;
   top: 50%;
@@ -44,13 +44,13 @@ body {
 }
 
 .gm-ui-hover-effect {
-  top: -3px!important;
-  right: 5px!important;
+  top: -3px !important;
+  right: 5px !important;
 }
 
-.gm-ui-hover-effect > span {
-  width: 20px!important;
-  height: 20px!important;
+.gm-ui-hover-effect>span {
+  width: 20px !important;
+  height: 20px !important;
 }
 
 .stations_map .address_street {
@@ -65,12 +65,12 @@ body {
   padding: 0 10px;
 }
 
-.container_services  .energy_service:nth-child(odd) {
+.container_services .energy_service:nth-child(odd) {
   color: black;
   font-weight: bold;
 }
 
-.stations_map .address_street svg{
+.stations_map .address_street svg {
   display: inline;
 }
 
@@ -80,7 +80,7 @@ body {
 }
 
 .stations_map .link {
-  background-color: #04AA6D!important;
+  background-color: #04AA6D !important;
   border-radius: 5px;
   font-size: 17px;
   padding: 6px 18px;
@@ -103,7 +103,7 @@ body {
   overflow: hidden;
 }
 
-.energy_types span.flex-1{
+.energy_types span.flex-1 {
   width: 50px;
   display: block;
 }
@@ -154,8 +154,13 @@ body {
   color: #ff002f;
 }
 
-.box_price_name, .box_price {
+.box_price_name,
+.box_price {
   font-size: 13px;
   font-weight: 500;
   margin-bottom: 5px;
+}
+
+.leaflet-popup .eaflet-zoom-animated {
+  height: 300px;
 }
