@@ -180,17 +180,17 @@ export default function GetMap() {
                                 if (!leafletMap.current) return;
 
                                 console.log(leafletMap);
-                                // leafletMap.current.flyTo({ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }, 13);
+                                leafletMap.current.flyTo({ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }, 13);
                             },
                         }}
                         position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
                     >
                         <Popup
-                            autoPan={true}
-                            keepInView={false}
-                            autoPanPaddingBottomRight={new Point(10, 10)}
-                            autoPanPaddingTopLeft={new Point(10, 10)}
-                            autoPanPadding={new Point(10, 10)}
+                            // autoPan={true}
+                            // keepInView={false}
+                            // autoPanPaddingBottomRight={new Point(10, 10)}
+                            // autoPanPaddingTopLeft={new Point(10, 10)}
+                            // autoPanPadding={new Point(10, 10)}
                         >
                             {energyStationPopUp(marker)}
                         </Popup>
