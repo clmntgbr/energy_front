@@ -6,6 +6,52 @@ body {
   background: #f9fafb;
 }
 
+.leaflet-popup {
+  width: 300px !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+
+.stations_map img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 12px 12px 0 0;
+}
+
+.google_map_link {
+  font-size: 28px !important;
+  position: absolute !important;
+  top: 10px !important;
+  left: 10px !important;
+  display: inline;
+  color: white !important;
+  font-weight: 800 !important;
+  font-family: 'Roboto', sans-serif !important;
+  background-color: #00000099 !important;
+  padding: 6px !important;
+  border-radius: 100% !important;
+}
+
+.stations_map h3 {
+  font-size: 12px;
+  position: relative;
+  top: -65px;
+  left: 10px;
+  right: 10px;
+  display: inline;
+  color: white;
+  max-width: calc(100% - 20px);
+  font-weight: 800;
+  font-family: 'Roboto', sans-serif;
+  background-color: #00000099;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* //////////////////////////////////////////// */
+
 .loader {
   width: 100%;
   height: calc(100% - 4rem);
@@ -18,20 +64,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.google_map_link {
-  font-size: 28px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: inline;
-  color: white;
-  font-weight: 800;
-  font-family: 'Roboto', sans-serif;
-  background-color: #00000099;
-  padding: 6px;
-  border-radius: 100%;
 }
 
 .gm-style .gm-style-iw-c {
@@ -111,26 +143,6 @@ body {
 .gm-style-iw-tc {
   display: none;
 }
-
-.stations_map h3 {
-  font-size: 16px;
-  position: relative;
-  top: -35px;
-  left: 8px;
-  display: inline;
-  color: white;
-  font-weight: 800;
-  font-family: 'Roboto', sans-serif;
-  background-color: #00000099;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.stations_map img {
-  width: 100%;
-  max-width: 350px;
-}
-
 .container_prices {
   display: flex;
   margin-top: 10px;
