@@ -6,12 +6,17 @@ import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import { useEffect, useRef, useState } from 'react';
 import * as sprintf from 'sprintf-js';
-import L, { DragEndEvent, LatLng, Point } from 'leaflet';
+import L, { DragEndEvent, LatLng } from 'leaflet';
 import energyStationPopUp from './EnergyStationPopUp';
 
 const initialMapCenter = {
     lat: 48.853,
     lng: 2.35,
+};
+
+const energyStationType = {
+    gas: 'GAS',
+    ev: 'EV'
 };
 
 export default function GetMap() {
@@ -24,9 +29,8 @@ export default function GetMap() {
 
 
     const [selectedZoom, setSelectedZoom] = useState(11);
-    const [selectedMarker, setSelectedMarker] = useState(null);
     const [selectedEnergyType, setSelectedEnergyType] = useState(process.env.NEXT_PUBLIC_GAS_TYPE_UUID as string);
-    const [selectedEnergyStationType, setSelectedEnergyStationType] = useState('GAS');
+    const [selectedEnergyStationType, setSelectedEnergyStationType] = useState(energyStationType.gas);
 
     const leafletMap = useRef(null);
 
@@ -38,7 +42,6 @@ export default function GetMap() {
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
-                setSelectedMarker(null);
                 setMarkers(data['hydra:member']);
             });
     }
@@ -175,22 +178,20 @@ export default function GetMap() {
                     <Marker
                         key={marker["uuid"]}
                         eventHandlers={{
-                            click: () => {
+                            click: (event) => {
                                 if (!leafletMap) return;
                                 if (!leafletMap.current) return;
 
-                                console.log(leafletMap);
-                                // leafletMap.current.flyTo({ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }, 13);
+                                const LatLng = event.latlng;
+                                dragEndEnergyStations(leafletMap.current, LatLng.lat, LatLng.lng, selectedZoom);
+
                             },
                         }}
                         position={{ lat: parseFloat(marker["address"]["latitude"]), lng: parseFloat(marker["address"]["longitude"]) }}
                     >
                         <Popup
-                            autoPan={true}
-                            // keepInView={false}
-                            autoPanPaddingBottomRight={new Point(10, 10)}
-                            // autoPanPaddingTopLeft={new Point(10, 10)}
-                            // autoPanPadding={new Point(10, 10)}
+                        // keepInView={false}
+                        // autoPanPaddingTopLeft={new Point(10, 250)}
                         >
                             {energyStationPopUp(marker)}
                         </Popup>

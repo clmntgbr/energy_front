@@ -23,8 +23,8 @@ body {
 .google_map_link {
   font-size: 28px !important;
   position: absolute !important;
-  top: 10px !important;
-  left: 10px !important;
+  top: 5px !important;
+  left: 5px !important;
   display: inline;
   color: white !important;
   font-weight: 800 !important;
@@ -48,6 +48,14 @@ body {
   background-color: #00000099;
   padding: 10px;
   border-radius: 10px;
+}
+
+.leaflet-popup-close-button {
+  color: #ffffff !important;
+  background-color: #00000099 !important;
+  border-radius: 50% !important;
+  top: 5px !important;
+  right: 5px !important;
 }
 
 /* //////////////////////////////////////////// */
@@ -143,6 +151,7 @@ body {
 .gm-style-iw-tc {
   display: none;
 }
+
 .container_prices {
   display: flex;
   margin-top: 10px;
