@@ -18,6 +18,7 @@ body {
   width: 100%;
   max-width: 300px;
   border-radius: 12px 12px 0 0;
+  height: 200px;
 }
 
 .google_map_link {
@@ -34,20 +35,33 @@ body {
   border-radius: 100% !important;
 }
 
-.stations_map h3 {
+.stations_map .titles {
   font-size: 12px;
-  position: relative;
-  top: -65px;
+  position: absolute;
   left: 10px;
   right: 10px;
-  display: inline;
+  display: block;
   color: white;
-  max-width: calc(100% - 20px);
+  max-width: calc(100%);
   font-weight: 800;
   font-family: 'Roboto', sans-serif;
   background-color: #00000099;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 5px 10px;
+}
+
+.stations_map .titles.address_street {
+  top: 141px;
+  border-radius: 0;
+}
+
+.stations_map .titles.address_city {
+  top: 166px;
+  border-radius: 0 0 10px 10px;
+}
+
+.stations_map .titles.name {
+  top: 116px;
+  border-radius: 10px 10px 0 0;
 }
 
 .leaflet-popup-close-button {
@@ -91,18 +105,6 @@ body {
 .gm-ui-hover-effect>span {
   width: 20px !important;
   height: 20px !important;
-}
-
-.stations_map .address_street {
-  max-width: 350px;
-  padding: 0 10px;
-  line-height: 15px;
-  display: block;
-}
-
-.stations_map .address_city {
-  max-width: 350px;
-  padding: 0 10px;
 }
 
 .container_services .energy_service:nth-child(odd) {

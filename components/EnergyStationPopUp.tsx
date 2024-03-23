@@ -9,10 +9,10 @@ function energyStationPopUp(marker: never) {
         <div className={'stations_map'}>
             <a className={'google_map_link'} href={url} target="_blank"><TbMapShare></TbMapShare></a>
             <img src={process.env.NEXT_PUBLIC_GAS_BACK_URL + marker['imagePath']} alt="Marker Image" />
-            <h3>{marker['name']}</h3>
+            <h3 className={"titles name"}>{marker['name']}</h3>
+            <a className={'titles address_street'} onClick={() => handleCopy(marker)}>{marker['address']['number']} {marker['address']['street']}</a>
+            <a className={'titles address_city'} onClick={() => handleCopy(marker)}>{marker['address']['postalCode']}, {marker['address']['city']}</a>
             <Rating initialValue={marker['googlePlace']['rating']}></Rating>
-            <a className={'address_street'} onClick={() => handleCopy(marker)}>{marker['address']['number']} {marker['address']['street']}</a>
-            <a className={'address_city'} onClick={() => handleCopy(marker)}>{marker['address']['postalCode']}, {marker['address']['city']}</a>
             <div className="container_prices">
                 {getLastPrices(marker)}
             </div>
